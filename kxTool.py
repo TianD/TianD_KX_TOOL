@@ -35,10 +35,4 @@ class KXTool(object):
         else :
             pass
         
-    def getExcel(self):
-        glob.glob("%s\\*.xls*" %self.projectPath)
-
-    
-    def queryExcel(self):
-        pass
         
