@@ -17,8 +17,9 @@ class KXTool(object):
     
     def __init__(self):
         '''
-                用于凯旋项目，所有TianD_MAYA功能的基类
+                用于凯旋项目，所有TianD功能的基类
         '''
+        self.projectPath = "C:\\Users\\huiguoyu\\Desktop"
         self.defaultCameraNameLst = ['persp', 'top', 'front', 'side']
         self.fileName = pm.Env().sceneName().namebase
 
@@ -34,6 +35,10 @@ class KXTool(object):
         else :
             pass
         
+    def getExcel(self):
+        glob.glob("%s\\*.xls*" %self.projectPath)
 
     
+    def queryExcel(self):
+        pass
         
