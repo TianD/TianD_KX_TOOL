@@ -4,14 +4,14 @@ Created on 2015/7/8
 
 @author: TianD
 '''
-import sys
-path = "E:\\Scripts\\Eclipse\\TianD_KX_TOOL"
-if path not in sys.path:
-    sys.path.append(path)
+# import sys
+# path = "E:\\Scripts\\Eclipse\\TianD_KX_TOOL"
+# if path not in sys.path:
+#     sys.path.append(path)
 
 import pymel.core as pm
 import uiTool
-import kxMayaTool
+import kxMayaTool, excelTool
 reload(uiTool)
 
 class ANIMTool(kxMayaTool.KXTool):
@@ -30,11 +30,11 @@ class ANIMTool(kxMayaTool.KXTool):
         '''
         super(ANIMTool, self).__init__()
         
-        
+
     def getAnimCamera(self):
         self.analyzeSceneName()
-        if self.fileName:
-            cameraName = "cam_%s_%s_%s" %(self.setNumber, self.sessionName, self.sceneName)
+        if self.sceneName:
+            cameraName = "cam_%s_%s_%s" %(self.episodeNumber, self.sessionNumber, self.sceneNumber)
             try:
                 self.camera = pm.PyNode(cameraName)
             except:
@@ -42,7 +42,12 @@ class ANIMTool(kxMayaTool.KXTool):
         
         else :
             pass
-        
+    
+    def getFrameRange(self):
+        self.min = pm.playbackOptions(q = 1, min = 1)
+        self.max = pm.playbackOptions(q = 1, max = 1)
+        self.start = pm.playbackOptions(q = 1, start = 1)
+        self.end = pm.playbackOptions(q = 1, end = 1)
     
     def getNeedlessCamera(self):
         cameraLst = [cam.getParent() for cam in pm.ls(type = 'camera')]
@@ -63,8 +68,12 @@ class ANIMTool(kxMayaTool.KXTool):
         for attr in cbAttr:
             if not attr.isLocked():
                 return "相机属性没有锁定!!!"
+            
+        
+    def framesIntercept(self):
+        
     
- 
+    
 def animIntercept():
     errorDic = dict()
     

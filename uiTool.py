@@ -9,8 +9,6 @@ import maya.OpenMayaUI as OpenMayaUI
 from PyQt4 import QtGui, QtCore, uic
 import sip
 
-import pymel.core as pm
-
 def wrapInstance(SwigObject):
     return sip.wrapinstance(long(SwigObject), QtCore.QObject)
 
@@ -90,6 +88,8 @@ class ActiveLabel(QtGui.QLabel):
     
     #重写QtGui.QLabel的mousePressEvent方法, 让他选择maya中的对象       
     def mousePressEvent(self, *args, **kwargs):
+        
+        import pymel.core as pm
         pm.select(self.result)
             
 

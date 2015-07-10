@@ -16,5 +16,8 @@ for s in wb.sheets():
     
     for row in range(s.nrows):
         print s.cell(row,0)
-        
     
+    for i in dir(s):
+        print i
+        
+    print s.row_values(0)
