@@ -9,15 +9,13 @@ import sys, os
 
 import re, glob
 
-import xlrd
-
 import pymel.core as pm
 
 class KXTool(object):
     
     def __init__(self):
         '''
-                用于凯旋项目，所有TianD功能的基类
+                用于凯旋项目，所有MAYA内部功能的基类
         '''
         self.projectPath = "C:\\Users\\huiguoyu\\Desktop"
         self.defaultCameraNameLst = ['persp', 'top', 'front', 'side']

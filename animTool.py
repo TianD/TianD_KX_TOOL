@@ -10,10 +10,11 @@ if path not in sys.path:
     sys.path.append(path)
 
 import pymel.core as pm
-import uiTool, kxTool
+import uiTool
+import kxMayaTool
 reload(uiTool)
 
-class ANIMTool(kxTool.KXTool):
+class ANIMTool(kxMayaTool.KXTool):
     
     def __init__(self):
         '''
