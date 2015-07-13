@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>animInterceptWindow</class>
+ <widget class="QMainWindow" name="animInterceptWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>167</width>
+    <height>226</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>动画拦截工具</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QGridLayout" name="gridLayout" columnstretch="0,0">
+      <property name="horizontalSpacing">
+       <number>6</number>
+      </property>
+      <property name="verticalSpacing">
+       <number>10</number>
+      </property>
+      <item row="2" column="1">
+       <widget class="QPushButton" name="check3Btn">
+        <property name="styleSheet">
+         <string notr="true">border-image:url(E:/Scripts/Eclipse/TianD_KX_TOOL/source/question.png);</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>../../../../ui/question-bold.png</normaloff>../../../../ui/question-bold.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label5">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>帧数范围是否正确</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="label6">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>有norender以外的层</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="label7">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>是否整理了大纲</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QPushButton" name="check7Btn">
+        <property name="styleSheet">
+         <string notr="true">border-image:url(E:/Scripts/Eclipse/TianD_KX_TOOL/source/question.png);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>../../../../ui/question-bold.png</normaloff>../../../../ui/question-bold.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QPushButton" name="check4Btn">
+        <property name="styleSheet">
+         <string notr="true">border-image:url(E:/Scripts/Eclipse/TianD_KX_TOOL/source/question.png);</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>../../../../ui/question-bold.png</normaloff>../../../../ui/question-bold.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label3">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>相机缩放是否为1</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QPushButton" name="check6Btn">
+        <property name="styleSheet">
+         <string notr="true">border-image:url(E:/Scripts/Eclipse/TianD_KX_TOOL/source/question.png);</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>../../../../ui/question-bold.png</normaloff>../../../../ui/question-bold.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="check1Btn">
+        <property name="styleSheet">
+         <string notr="true">border-image:url(E:/Scripts/Eclipse/TianD_KX_TOOL/source/question.png);</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>../../../../ui/question-bold.png</normaloff>../../../../ui/question-bold.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label2">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>相机是否锁定</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QPushButton" name="check5Btn">
+        <property name="styleSheet">
+         <string notr="true">border-image:url(E:/Scripts/Eclipse/TianD_KX_TOOL/source/question.png);</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>../../../../ui/question-bold.png</normaloff>../../../../ui/question-bold.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="check2Btn">
+        <property name="styleSheet">
+         <string notr="true">border-image:url(E:/Scripts/Eclipse/TianD_KX_TOOL/source/question.png);</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>../../../../ui/question-bold.png</normaloff>../../../../ui/question-bold.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label4">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>是否有多余相机</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label1">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>相机命名是否正确</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="label8">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>是否删除了空组</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QPushButton" name="check8Btn">
+        <property name="styleSheet">
+         <string notr="true">border-image:url(E:/Scripts/Eclipse/TianD_KX_TOOL/source/question.png);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>../../../../ui/question-bold.png</normaloff>../../../../ui/question-bold.png</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -24,8 +24,8 @@ class KXTool(object):
         
         self.sceneName = pm.Env().sceneName().namebase
         
-        if self.fileName :
-            m = re.match(r"(?P<project_name>\w+)_(?P<episode_number>\d+)_(?P<session_number>\w+)_(?P<scene_number>\d+)_(?P<process_name>\w+)_(?P<version_number>\w+)", self.fileName)
+        if self.sceneName :
+            m = re.match(r"(?P<project_name>\w+)_(?P<episode_number>\d+)_(?P<session_number>\w+)_(?P<scene_number>\d+)_(?P<process_name>\w+)_(?P<version_number>\w+)", self.sceneName)
             self.projectName = m.group('project_name')              #项目名称
             self.episodeNumber =  m.group('episode_number')         #集数     
             self.sessionNumber = m.group('session_number')              #场号  
@@ -37,19 +37,10 @@ class KXTool(object):
         
 
     def getExcel(self, path = None):
-        
-        import excelTool
-                
+                        
         if path :
             pass
         else :
             self.analyzeSceneName()
-            path = glob.glob("%s\\[!~$]*%s*.xls*" %(self.excelPath, self.setNumber))
-            if len(path) == 1 :
-                return path[0]
-            else :
-                return None
-        
-        self.wb = excelTool.open(path)
-        
-    
+            self.path = glob.glob("%s\\[!~$]*%s*.xls*" %(self.excelPath, self.episodeNumber))
+            

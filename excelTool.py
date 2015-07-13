@@ -7,35 +7,39 @@ Created on 2015/7/10
 
 import xlrd
 
-class EXCELRead(object):
+'''
+读取excel表格的类
+分析sheet, row, col, header, cell等内容
+header包括: 集数, 场次, 镜头号, 帧数, 起始, 结束, upload, 夸张表情, 罐头镜, 特效清单
+'''
+
+def openExcel(path):
+    try:
+        wb = xlrd.open_workbook(path)
+        sheet = wb.sheet_by_index(0)
+        return sheet 
+    except Exception,e:
+        print str(e)
     
-    def __init__(self, path):
-        '''
-                读取excel表格的类
-                分析sheet, row, col, header, cell等内容
-        header包括: 集数, 场次, 镜头号, 帧数, 起始, 结束, upload, 夸张表情, 罐头镜, 特效清单
-        '''
-        try:
-            wb = xlrd.open_workbook(path)
-        except Exception,e:
-            print str(e)
-            
-        self.sheet = wb.sheets()[0]
-        
-        self.__analyzeHeader()
+def locate(sheet, session, scene, episode = "current"):
     
-    def __analyzeHeader(self):
-        headers = self.sheet.row_values(0)
-        self.head_episode = headers[0]
-        self.head_session = headers[1]
-        self.head_scene = headers[2]
-        self.head_frames = headers[3]
-        self.head_start = headers[4]
-        self.head_end = headers[5]
-        return headers
+    #locate scene number
+    sceneLst = sheet.col_values(2)
+    scene_location = [i for i in range(len(sceneLst)) if sceneLst[i] == scene]
     
-    #def getFrames(sheet, episodeNumber, sessionNumber, sceneNumber):
-        
-    def locate(self):
-        self.sheet.col_values()
+    #locate session number
+    sessionLst = sheet.col_values(1)
+    session_location = [i for i in range(len(sessionLst)) if sessionLst[i] == session]
     
+    row_number = [r for r in scene_location if r in session_location]
+    
+    return row_number
+
+def getFrameRange(sheet, row):
+    frames, start, end = [sheet.cell_value(row, i) for i in range(3,6)]
+    return frames, start, end
+
+if __name__ == "__main__":
+    sheet = openExcel(u"C:\\Users\\huiguoyu\\Desktop\\EP019帧数表.xlsx")
+    row = locate(sheet, "001", "020")
+    print getFrameRange(sheet, row[0])
