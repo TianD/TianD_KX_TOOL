@@ -194,7 +194,6 @@ class ANIMIntercept(kxMayaTool.KXTool):
         self.analyzeSceneName()
         
     def getAnimCamera(self):
-        #self.analyzeSceneName()
         if self.sceneName:
             cameraName = "cam_%s_%s_%s" %(self.episodeNumber, self.sessionNumber, self.sceneNumber)
             try:
@@ -238,10 +237,6 @@ class ANIMIntercept(kxMayaTool.KXTool):
         return True
             
     def framesIntercept(self):
-#         self.getExcel()
-#         sheet = excelTool.openExcel(self.path[0])
-#         rowID = excelTool.locate(sheet, self.sessionNumber, self.sceneNumber)
-#         frameRange = excelTool.getFrameRange(sheet, rowID[0])
         frameRange = pm.mel.eval('idmtProject -timeLine "%s.mb"' %self.sceneName)
         self.getFrameRange()
         if self.min != frameRange[0]:
