@@ -16,14 +16,17 @@ import kxMayaTool
 reload(kxMayaTool)
 reload(uiTool)
 
+import playblasterUI
+
 uiPath = os.environ['XBMLANGPATH'].split(";")[1] + "/TianD_KX_TOOL"
-form_class, base_class = uic.loadUiType('%s/animInterceptWindow.ui' %uiPath)
+form_class, base_class = uic.loadUiType('%s/animInterceptWindow_all.ui' %uiPath)
 class ANIMInterceptTool(form_class, base_class):
     
     def __init__(self, parent = uiTool.getMayaWindow()):
                 
         super(ANIMInterceptTool, self).__init__(parent)
         self.setupUi(self)
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.setWindowIcon(QtGui.QIcon("%s/bullet_deny.png" %uiPath))
         self.check1Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
         self.check2Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
@@ -34,20 +37,28 @@ class ANIMInterceptTool(form_class, base_class):
         self.check7Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
         self.check8Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
         
+        self.check1Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
+        self.check2Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
+        self.check3Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
+        self.check4Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
+        self.check5Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
+        self.check6Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
+        self.check7Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
+        self.check8Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
         
         self.anim = ANIMIntercept()
         
-        self.check1Btn.clicked.connect(self.getAnimCamera)
-        self.check2Btn.clicked.connect(self.camLock)
-        self.check3Btn.clicked.connect(self.camScale1)
-        self.check4Btn.clicked.connect(self.getNeedlessCamera)
-        self.check5Btn.clicked.connect(self.framesIntercept)
-        #self.check6Btn.clicked.connect(self.anim.getAnimCamera())        #删除norender以外的层
-        #self.check7Btn.clicked.connect(self.anim.getAnimCamera())        #整理大纲
+        self.check1Btn.clicked.connect(self.getAnimCamera)                #相机命名
+        self.check2Btn.clicked.connect(self.camLock)                      #相机锁定
+        self.check3Btn.clicked.connect(self.camScale1)                    #相机缩放
+        self.check4Btn.clicked.connect(self.getNeedlessCamera)            #多余相机
+        self.check5Btn.clicked.connect(self.framesIntercept)              #整理帧数范围
+        self.check6Btn.clicked.connect(self.displayLayerIntercept)        #删除norender以外的层
+        self.check7Btn.clicked.connect(self.clearUpOutliner)              #整理大纲
         #self.check8Btn.clicked.connect(self.anim.)                       #删除空组
         
-        #self.checkAllBtn.clicked.connect(self.checkAll)
-        #self.skipAllBtn.clicked.connect(self.skipAll)
+        self.checkAllBtn.clicked.connect(self.checkAll)
+        self.skipAllBtn.clicked.connect(self.skipAll)
         
         self.flag1 = None
         self.flag2 = None
@@ -58,8 +69,8 @@ class ANIMInterceptTool(form_class, base_class):
         self.flag7 = None
         self.flag8 = None
         
-        self.allFlag = self.checkAll()
-    
+        self.checkAll()
+        
     def getAnimCamera(self):
         flag = self.anim.getAnimCamera()
         if flag :
@@ -161,19 +172,87 @@ class ANIMInterceptTool(form_class, base_class):
             pass
         else:
             pass
+    
+    def displayLayerIntercept(self):
+        if self.flag6 is None:
+            flag = self.anim.displayLayerIntercept()
+            if flag :
+                self.check6Btn.setIcon(QtGui.QIcon("%s/ok.png" %uiPath))
+                self.check6Btn.setStyleSheet("border-image:url(%s/ok.png);" %uiPath)
+                self.flag6 = True
+            else :
+                self.check6Btn.setIcon(QtGui.QIcon("%s/cancel.png" %uiPath))
+                self.check6Btn.setStyleSheet("border-image:url(%s/cancel.png);" %uiPath)
+                self.flag6 = False
+        elif self.flag6 is True:
+            pass
+        else:
+            pm.select(self.anim.needlessDisLayers)
+    
+    def clearUpOutliner(self):
+        if self.flag1 is None:
+            pass
+        elif self.flag7 is None and self.flag1 is True:
+            flag = self.anim.clearUpOutliner()
+            if flag :
+                self.check7Btn.setIcon(QtGui.QIcon("%s/ok.png" %uiPath))
+                self.check7Btn.setStyleSheet("border-image:url(%s/ok.png);" %uiPath)
+                self.flag7 = True
+            else :
+                self.check7Btn.setIcon(QtGui.QIcon("%s/cancel.png" %uiPath))
+                self.check7Btn.setStyleSheet("border-image:url(%s/cancel.png);" %uiPath)
+                self.flag7 = False
+        elif self.flag7 is True:
+            pass
+        elif self.flag1 is False:
+            self.check7Btn.setIcon(QtGui.QIcon("%s/cancel.png" %uiPath))
+            self.check7Btn.setStyleSheet("border-image:url(%s/cancel.png);" %uiPath)
+            self.flag7 = False
+        elif self.flag7 is False and self.flag1 is True:
+            pm.select(self.anim.needlessTop)
+        else :
+            pass
                                            
     def checkAll(self):
-        self.getAnimCamera()
-        self.camLock()
-        self.camScale1()
-        self.getNeedlessCamera()
-        self.framesIntercept()
-        if self.flag1 and self.flag2 and self.flag3 and self.flag4 and self.flag5:
+        if not self.skip1.checkState() :
+            self.flag1 = None
+            self.getAnimCamera()
+        if not self.skip2.checkState() :
+            self.flag2 = None
+            self.camLock()
+        if not self.skip3.checkState() :
+            self.flag3 = None
+            self.camScale1()
+        if not self.skip4.checkState() :
+            self.flag4 = None
+            self.getNeedlessCamera()
+        if not self.skip5.checkState() :
+            self.flag5 = None
+            self.framesIntercept()
+        if not self.skip6.checkState() :
+            self.flag6 = None
+            self.displayLayerIntercept()
+        if not self.skip7.checkState() :
+            self.flag7 = None
+            self.clearUpOutliner()
+        if not self.skip8.checkState() :
+            pass
+        if (self.flag1 or self.skip1.checkState()) and \
+            (self.flag2 or self.skip2.checkState()) and \
+            (self.flag3 or self.skip3.checkState()) and \
+            (self.flag4 or self.skip4.checkState()) and \
+            (self.flag5 or self.skip5.checkState()) and \
+            (self.flag6 or self.skip6.checkState()) and \
+            (self.flag7 or self.skip7.checkState()) :
+            self.close()
+            playblasterUI.startDlg()
             return True
         else :
             return False
     
     def skipAll(self):
+        self.close()
+        playblasterUI.startDlg()
         return True
         
 class ANIMIntercept(kxMayaTool.KXTool):
@@ -192,12 +271,14 @@ class ANIMIntercept(kxMayaTool.KXTool):
         '''
         super(ANIMIntercept, self).__init__()
         self.analyzeSceneName()
+        self.topGroups = ["persp", "top", "front", "side", "char", "set", "prop"]
         
     def getAnimCamera(self):
         if self.sceneName:
             cameraName = "cam_%s_%s_%s" %(self.episodeNumber, self.sessionNumber, self.sceneNumber)
             try:
                 self.camera = pm.PyNode(cameraName)
+                self.topGroups.append(self.camera.getParent(-1))
                 return True
             except:
                 return False
@@ -237,15 +318,40 @@ class ANIMIntercept(kxMayaTool.KXTool):
         return True
             
     def framesIntercept(self):
-        frameRange = pm.mel.eval('idmtProject -timeLine "%s.mb"' %self.sceneName)
-        self.getFrameRange()
-        if self.min != frameRange[0]:
+        try:
+            frameRange = pm.mel.eval('idmtProject -timeLine "%s.mb"' %self.sceneName)
+            self.getFrameRange()
+            if self.min != frameRange[0]:
+                return False
+            if self.max != frameRange[1]:
+                return False
+            return True
+        except :
+            pass
+    
+    def displayLayerIntercept(self, exRef = 0):
+        displayLayers = pm.ls(type = "displayLayer")
+        if exRef :
+            self.needlessDisLayers = [dl for dl in displayLayers if dl.name() != "norender" and not dl.isReferenced() and dl.name() != "defaultLayer"]
+        else :
+            self.needlessDisLayers = [dl for dl in displayLayers if dl.name() != "norender" and dl.name() != "defaultLayer"]
+        if self.needlessDisLayers :
             return False
-        if self.max != frameRange[1]:
+        return True  
+    
+    def clearUpOutliner(self):
+        top = pm.ls(assemblies = 1)
+        self.needlessTop = [t for t in top if t.name() not in self.topGroups]
+        if self.needlessTop:
             return False
         return True
-
     
+def show():
+    if uiTool.windowExisted("animInterceptWindow"):
+        pass
+    else :
+        a = ANIMInterceptTool()
+        a.show()
+        
 if __name__ == "__main__":
-    a = ANIMInterceptTool()
-    a.show()
+    show()

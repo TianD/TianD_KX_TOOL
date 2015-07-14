@@ -37,5 +37,14 @@ def toQtObject(mayaName):
     if ptr is not None:
         return wrapInstance(ptr)
 
-def getChildrenUI(QtGuiObject):
-    return QtGuiObject.children()       
+def getChildrenUI(uiObject):
+    return uiObject.children()
+
+def windowExisted(mayaName):
+    uiObject = toQtObject(mayaName)
+    if uiObject :
+        uiObject.showNormal()
+        uiObject.activateWindow()
+        return True
+    else :
+        return False
