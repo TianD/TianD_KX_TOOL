@@ -12,8 +12,8 @@ import PyQt4.uic as uic
 
 import pymel.core as pm
 import uiTool
-import kxMayaTool
-reload(kxMayaTool)
+import kxTool
+reload(kxTool)
 reload(uiTool)
 
 import playblasterUI
@@ -28,6 +28,7 @@ class ANIMInterceptTool(form_class, base_class):
         self.setupUi(self)
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.setWindowIcon(QtGui.QIcon("%s/bullet_deny.png" %uiPath))
+        self.check0Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
         self.check1Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
         self.check2Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
         self.check3Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
@@ -37,6 +38,7 @@ class ANIMInterceptTool(form_class, base_class):
         self.check7Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
         self.check8Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
         
+        self.check0Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
         self.check1Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
         self.check2Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
         self.check3Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
@@ -48,6 +50,7 @@ class ANIMInterceptTool(form_class, base_class):
         
         self.anim = ANIMIntercept()
         
+        self.check0Btn.clicked.connect(self.checkSceneName)               #文件命名
         self.check1Btn.clicked.connect(self.getAnimCamera)                #相机命名
         self.check2Btn.clicked.connect(self.camLock)                      #相机锁定
         self.check3Btn.clicked.connect(self.camScale1)                    #相机缩放
@@ -60,6 +63,7 @@ class ANIMInterceptTool(form_class, base_class):
         self.checkAllBtn.clicked.connect(self.checkAll)
         self.skipAllBtn.clicked.connect(self.skipAll)
         
+        self.flag0 = None
         self.flag1 = None
         self.flag2 = None
         self.flag3 = None
@@ -70,6 +74,21 @@ class ANIMInterceptTool(form_class, base_class):
         self.flag8 = None
         
         self.checkAll()
+        
+    def checkSceneName(self):
+        flag = self.anim.checkSceneName()
+        if flag :
+            self.check0Btn.setIcon(QtGui.QIcon("%s/ok.png" %uiPath))
+            self.check0Btn.setStyleSheet("border-image:url(%s/ok.png);" %uiPath)
+            self.flag0 = True
+        else :
+            self.check0Btn.setIcon(QtGui.QIcon("%s/cancel.png" %uiPath))
+            self.check0Btn.setStyleSheet("border-image:url(%s/cancel.png);" %uiPath)
+            self.flag0 = False
+        if self.flag0 is True:
+            pass
+        else :
+            pass
         
     def getAnimCamera(self):
         flag = self.anim.getAnimCamera()
@@ -214,6 +233,11 @@ class ANIMInterceptTool(form_class, base_class):
             pass
                                            
     def checkAll(self):
+        self.anim.getSceneName()
+        self.anim.analyzeSceneName()
+        if not self.skip0.checkState():
+            self.flag0 = None
+            self.checkSceneName()
         if not self.skip1.checkState() :
             self.flag1 = None
             self.getAnimCamera()
@@ -255,7 +279,7 @@ class ANIMInterceptTool(form_class, base_class):
         playblasterUI.startDlg()
         return True
         
-class ANIMIntercept(kxMayaTool.KXTool):
+class ANIMIntercept(kxTool.KXTool):
     
     def __init__(self):
         '''
@@ -270,9 +294,20 @@ class ANIMIntercept(kxMayaTool.KXTool):
             8.自动在outerline里吧角色归到char组,场景归到set组,道具归到prop组;
         '''
         super(ANIMIntercept, self).__init__()
+        self.getSceneName()
         self.analyzeSceneName()
         self.topGroups = ["persp", "top", "front", "side", "char", "set", "prop"]
-        
+    
+    def checkSceneName(self):
+        try:
+            frameRange = pm.mel.eval('idmtProject -timeLine "%s.mb"' %self.sceneName)
+            if frameRange :
+                return True
+            else :
+                return False
+        except:
+            pass
+    
     def getAnimCamera(self):
         if self.sceneName:
             cameraName = "cam_%s_%s_%s" %(self.episodeNumber, self.sessionNumber, self.sceneNumber)
@@ -332,9 +367,9 @@ class ANIMIntercept(kxMayaTool.KXTool):
     def displayLayerIntercept(self, exRef = 0):
         displayLayers = pm.ls(type = "displayLayer")
         if exRef :
-            self.needlessDisLayers = [dl for dl in displayLayers if dl.name() != "norender" and not dl.isReferenced() and dl.name() != "defaultLayer"]
+            self.needlessDisLayers = [dl for dl in displayLayers if dl.name() != "norender" and not dl.isReferenced() and "defaultLayer" not in dl.name()]
         else :
-            self.needlessDisLayers = [dl for dl in displayLayers if dl.name() != "norender" and dl.name() != "defaultLayer"]
+            self.needlessDisLayers = [dl for dl in displayLayers if dl.name() != "norender" and "defaultLayer" not in dl.name()]
         if self.needlessDisLayers :
             return False
         return True  

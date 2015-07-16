@@ -11,12 +11,13 @@ Created on 2015/7/8
 
 import pymel.core as pm
 import uiTool
-import kxMayaTool, excelTool
-reload(kxMayaTool)
+import excelTool
+import kxTool
+reload(kxTool)
 reload(uiTool)
 reload(excelTool)
 
-class ANIMTool(kxMayaTool.KXTool):
+class ANIMTool(kxTool.KXTool):
     
     def __init__(self):
         '''
