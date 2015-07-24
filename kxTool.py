@@ -28,6 +28,7 @@ class KXTool(object):
         elif "maya" in self.interpreter:
             import pymel.core as pm
             self.sceneName = pm.Env().sceneName().namebase
+            self.ext = pm.Env().sceneName().ext
         else :
             pass
         

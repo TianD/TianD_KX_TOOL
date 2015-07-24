@@ -6,12 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>224</width>
-    <height>226</height>
+    <width>223</width>
+    <height>324</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>动画拦截工具</string>
+  </property>
+  <property name="windowOpacity">
+   <double>1.000000000000000</double>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -23,173 +26,10 @@
       <property name="verticalSpacing">
        <number>10</number>
       </property>
-      <item row="2" column="1">
-       <widget class="QPushButton" name="check3Btn">
-        <property name="styleSheet">
-         <string notr="true">border-image:url(E:/Scripts/Eclipse/TianD_KX_TOOL/source/question.png);</string>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>../../../../ui/question-bold.png</normaloff>../../../../ui/question-bold.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="label5">
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>帧数范围是否正确</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="label6">
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>有norender以外的层</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0">
-       <widget class="QLabel" name="label7">
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>是否整理了大纲</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="2">
-       <widget class="QCheckBox" name="skip6">
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>SKIP</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QCheckBox" name="skip3">
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>SKIP</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="2">
-       <widget class="QCheckBox" name="skip5">
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>SKIP</string>
-        </property>
-       </widget>
-      </item>
       <item row="6" column="1">
-       <widget class="QPushButton" name="check7Btn">
-        <property name="styleSheet">
-         <string notr="true">border-image:url(E:/Scripts/Eclipse/TianD_KX_TOOL/source/question.png);</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>../../../../ui/question-bold.png</normaloff>../../../../ui/question-bold.png</iconset>
-        </property>
-       </widget>
+       <widget class="QPushButton" name="check5Btn"/>
       </item>
-      <item row="0" column="2">
-       <widget class="QCheckBox" name="skip1">
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>SKIP</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="2">
-       <widget class="QCheckBox" name="skip4">
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>SKIP</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QPushButton" name="check4Btn">
-        <property name="styleSheet">
-         <string notr="true">border-image:url(E:/Scripts/Eclipse/TianD_KX_TOOL/source/question.png);</string>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>../../../../ui/question-bold.png</normaloff>../../../../ui/question-bold.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label3">
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>相机缩放是否为1</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="QPushButton" name="check6Btn">
-        <property name="styleSheet">
-         <string notr="true">border-image:url(E:/Scripts/Eclipse/TianD_KX_TOOL/source/question.png);</string>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>../../../../ui/question-bold.png</normaloff>../../../../ui/question-bold.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QPushButton" name="check1Btn">
-        <property name="styleSheet">
-         <string notr="true">border-image:url(E:/Scripts/Eclipse/TianD_KX_TOOL/source/question.png);</string>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>../../../../ui/question-bold.png</normaloff>../../../../ui/question-bold.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
+      <item row="3" column="0">
        <widget class="QLabel" name="label2">
         <property name="font">
          <font>
@@ -197,34 +37,11 @@
          </font>
         </property>
         <property name="text">
-         <string>相机是否锁定</string>
+         <string>相机锁定</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
-       <widget class="QPushButton" name="check5Btn">
-        <property name="styleSheet">
-         <string notr="true">border-image:url(E:/Scripts/Eclipse/TianD_KX_TOOL/source/question.png);</string>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>../../../../ui/question-bold.png</normaloff>../../../../ui/question-bold.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QCheckBox" name="skip2">
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>SKIP</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="2">
+      <item row="8" column="2">
        <widget class="QCheckBox" name="skip7">
         <property name="font">
          <font>
@@ -236,30 +53,37 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QPushButton" name="check2Btn">
-        <property name="styleSheet">
-         <string notr="true">border-image:url(E:/Scripts/Eclipse/TianD_KX_TOOL/source/question.png);</string>
+      <item row="3" column="2">
+       <widget class="QCheckBox" name="skip2">
+        <property name="enabled">
+         <bool>false</bool>
         </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>../../../../ui/question-bold.png</normaloff>../../../../ui/question-bold.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label4">
         <property name="font">
          <font>
           <pointsize>10</pointsize>
          </font>
         </property>
         <property name="text">
-         <string>是否有多余相机</string>
+         <string>SKIP</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
+      <item row="9" column="0">
+       <widget class="QLabel" name="label8">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string/>
+        </property>
+        <property name="text">
+         <string>删除空组</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
        <widget class="QLabel" name="label1">
         <property name="font">
          <font>
@@ -267,38 +91,249 @@
          </font>
         </property>
         <property name="text">
-         <string>相机命名是否正确</string>
+         <string>相机命名</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="0">
-       <widget class="QLabel" name="label8">
+      <item row="5" column="0">
+       <widget class="QLabel" name="label4">
         <property name="font">
          <font>
           <pointsize>10</pointsize>
          </font>
         </property>
         <property name="text">
-         <string>是否删除了空组</string>
+         <string>多余相机</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="1">
-       <widget class="QPushButton" name="check8Btn">
-        <property name="styleSheet">
-         <string notr="true">border-image:url(E:/Scripts/Eclipse/TianD_KX_TOOL/source/question.png);</string>
+      <item row="3" column="1">
+       <widget class="QPushButton" name="check2Btn"/>
+      </item>
+      <item row="4" column="1">
+       <widget class="QPushButton" name="check3Btn"/>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="label5">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
         </property>
         <property name="text">
-         <string/>
+         <string>帧数范围</string>
         </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>../../../../ui/question-bold.png</normaloff>../../../../ui/question-bold.png</iconset>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="label6">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>norender以外的层</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel" name="label7">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>把角色归到char组,场景归到set组,道具归到prop组</string>
+        </property>
+        <property name="text">
+         <string>整理大纲</string>
         </property>
        </widget>
       </item>
       <item row="7" column="2">
+       <widget class="QCheckBox" name="skip6">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>SKIP</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2">
+       <widget class="QCheckBox" name="skip3">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>SKIP</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="2">
+       <widget class="QCheckBox" name="skip5">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>SKIP</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="QPushButton" name="check7Btn">
+        <property name="toolTip">
+         <string>把角色归到char组,场景归到set组,道具归到prop组</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QCheckBox" name="skip1">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>SKIP</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="2">
+       <widget class="QCheckBox" name="skip4">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>SKIP</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QPushButton" name="check4Btn">
+        <property name="icon">
+         <iconset>
+          <normaloff>Z:/Resouce/Support/ui/question-bold.png</normaloff>Z:/Resouce/Support/ui/question-bold.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label3">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>相机缩放</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QPushButton" name="check6Btn"/>
+      </item>
+      <item row="2" column="1">
+       <widget class="QPushButton" name="check1Btn"/>
+      </item>
+      <item row="9" column="1">
+       <widget class="QPushButton" name="check8Btn">
+        <property name="toolTip">
+         <string/>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="2">
        <widget class="QCheckBox" name="skip8">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>SKIP</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label0">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>文件命名</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QCheckBox" name="skip0">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>SKIP</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="check0Btn">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label9">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>文件格式</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="check9Btn">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="skip9">
         <property name="font">
          <font>
           <pointsize>10</pointsize>
@@ -315,6 +350,9 @@
      <layout class="QGridLayout" name="gridLayout2" columnstretch="0,0">
       <item row="0" column="1">
        <widget class="QPushButton" name="skipAllBtn">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>12</pointsize>
@@ -333,7 +371,7 @@
          </font>
         </property>
         <property name="text">
-         <string>全部检查</string>
+         <string>再次检查</string>
         </property>
        </widget>
       </item>
@@ -343,5 +381,150 @@
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>skip1</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>check1Btn</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>212</x>
+     <y>54</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>155</x>
+     <y>58</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>skip2</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>check2Btn</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>212</x>
+     <y>86</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>155</x>
+     <y>85</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>skip3</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>check3Btn</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>212</x>
+     <y>113</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>155</x>
+     <y>112</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>skip4</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>check4Btn</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>212</x>
+     <y>140</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>155</x>
+     <y>139</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>skip5</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>check5Btn</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>212</x>
+     <y>167</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>155</x>
+     <y>166</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>skip6</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>check6Btn</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>212</x>
+     <y>194</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>155</x>
+     <y>193</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>skip7</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>check7Btn</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>212</x>
+     <y>221</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>155</x>
+     <y>220</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>skip8</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>check8Btn</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>212</x>
+     <y>248</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>155</x>
+     <y>247</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>skip0</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>check0Btn</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>195</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>145</x>
+     <y>23</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

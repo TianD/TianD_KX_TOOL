@@ -27,6 +27,8 @@ class ANIMInterceptTool(form_class, base_class):
         super(ANIMInterceptTool, self).__init__(parent)
         self.setupUi(self)
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+        self.setMaximumHeight(376)
+        self.setMaximumWidth(203)
         self.setWindowIcon(QtGui.QIcon("%s/bullet_deny.png" %uiPath))
         self.check0Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
         self.check1Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
@@ -37,6 +39,8 @@ class ANIMInterceptTool(form_class, base_class):
         self.check6Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
         self.check7Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
         self.check8Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
+        self.check9Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
+        self.check10Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
         
         self.check0Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
         self.check1Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
@@ -47,6 +51,8 @@ class ANIMInterceptTool(form_class, base_class):
         self.check6Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
         self.check7Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
         self.check8Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
+        self.check9Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
+        self.check10Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
         
         self.anim = ANIMIntercept()
         
@@ -58,6 +64,8 @@ class ANIMInterceptTool(form_class, base_class):
         self.check5Btn.clicked.connect(self.framesIntercept)              #整理帧数范围
         self.check6Btn.clicked.connect(self.displayLayerIntercept)        #删除norender以外的层
         self.check7Btn.clicked.connect(self.clearUpOutliner)              #整理大纲
+        self.check9Btn.clicked.connect(self.checkExt)                     #检查后缀名
+        self.check10Btn.clicked.connect(self.checkResolution)             #检查分辨率
         #self.check8Btn.clicked.connect(self.anim.)                       #删除空组
         
         self.checkAllBtn.clicked.connect(self.checkAll)
@@ -72,9 +80,26 @@ class ANIMInterceptTool(form_class, base_class):
         self.flag6 = None
         self.flag7 = None
         self.flag8 = None
+        self.flag9 = None
+        self.flag10 = None
         
         self.checkAll()
-        
+    
+    def checkExt(self):
+        flag = self.anim.checkExt()
+        if flag :
+            self.check9Btn.setIcon(QtGui.QIcon("%s/ok.png" %uiPath))
+            self.check9Btn.setStyleSheet("border-image:url(%s/ok.png);" %uiPath)
+            self.flag9 = True
+        else :
+            self.check9Btn.setIcon(QtGui.QIcon("%s/cancel.png" %uiPath))
+            self.check9Btn.setStyleSheet("border-image:url(%s/cancel.png);" %uiPath)
+            self.flag9 = False
+        if self.flag9 is True:
+            pass
+        else :
+            pass   
+            
     def checkSceneName(self):
         flag = self.anim.checkSceneName()
         if flag :
@@ -232,9 +257,27 @@ class ANIMInterceptTool(form_class, base_class):
         else :
             pass
                                            
+    def checkResolution(self):
+        flag = self.anim.checkResolution()
+        if flag :
+            self.check10Btn.setIcon(QtGui.QIcon("%s/ok.png" %uiPath))
+            self.check10Btn.setStyleSheet("border-image:url(%s/ok.png);" %uiPath)
+            self.flag10 = True
+        else :
+            self.check10Btn.setIcon(QtGui.QIcon("%s/cancel.png" %uiPath))
+            self.check10Btn.setStyleSheet("border-image:url(%s/cancel.png);" %uiPath)
+            self.flag10 = False
+        if self.flag10 is True:
+            pass
+        else :
+            pass
+            
     def checkAll(self):
         self.anim.getSceneName()
         self.anim.analyzeSceneName()
+        if not self.skip9.checkState() :
+            self.flag9 = None
+            self.checkExt()
         if not self.skip0.checkState():
             self.flag0 = None
             self.checkSceneName()
@@ -259,15 +302,22 @@ class ANIMInterceptTool(form_class, base_class):
         if not self.skip7.checkState() :
             self.flag7 = None
             self.clearUpOutliner()
+        if not self.skip10.checkState():
+            self.flag10 = None
+            self.checkResolution()
         if not self.skip8.checkState() :
             pass
+        
+            
         if (self.flag1 or self.skip1.checkState()) and \
             (self.flag2 or self.skip2.checkState()) and \
             (self.flag3 or self.skip3.checkState()) and \
             (self.flag4 or self.skip4.checkState()) and \
             (self.flag5 or self.skip5.checkState()) and \
             (self.flag6 or self.skip6.checkState()) and \
-            (self.flag7 or self.skip7.checkState()) :
+            (self.flag7 or self.skip7.checkState()) and \
+            (self.flag9 or self.skip9.checkState()) and \
+            (self.flag10 or self.skip10.checkState()):
             self.close()
             playblasterUI.startDlg()
             return True
@@ -297,6 +347,27 @@ class ANIMIntercept(kxTool.KXTool):
         self.getSceneName()
         self.analyzeSceneName()
         self.topGroups = ["persp", "top", "front", "side", "char", "set", "prop"]
+    
+    
+    def checkResolution(self):
+        try:
+            resolution = pm.PyNode("defaultResolution")
+            width = resolution.width.get()
+            height = resolution.height.get()
+            if width == 1920 and height == 1080 :
+                return True
+            else :
+                return False
+        except:
+            pass
+    
+    def checkExt(self):
+        if self.ext == ".ma" or self.ext == ".mayaAscii":
+            return False
+        elif self.ext == ".mb" or self.ext == ".mayaBinary":
+            return True
+        else :
+            return False
     
     def checkSceneName(self):
         try:
@@ -337,6 +408,13 @@ class ANIMIntercept(kxTool.KXTool):
             return True
     
     def camScale1(self):
+        if self.camera.getAllParents():
+            for p in self.camera.getAllParents():
+                pscale = p.s.get()
+                if pscale != pm.dt.Vector([1.0, 1.0, 1.0]):
+                    return False
+                else :
+                    pass
         scale = self.camera.s.get()
         if scale != pm.dt.Vector([1.0, 1.0, 1.0]):
             return False

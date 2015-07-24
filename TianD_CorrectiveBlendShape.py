@@ -22,20 +22,50 @@ def getBaseShape():
     else :
         return False
         
-def duplicateSculptShape(base):
-    if base.type() == "transform":
-        pass
-    elif base.type() == "mesh":
-        base = base.getParent()
+def duplicateSculptShape(obj):
+    if obj.type() == "transform":
+        transform = obj
+    elif obj.type() == "mesh":
+        transform = obj.getParent()
     else :
         return False
-    sculptShape = pm.duplicate(base, name = "%s_blendshape" %base.name())[0]
+    closeDeformer(transform)
+    sculptShape = pm.duplicate(transform, name = "%s_blendshape" %transform.name())[0]
     clearGeometry(sculptShape)
+    openDeformer(transform)
+    pm.blendShape(transform, sculptShape, origin = "local", w=(0,1))
+    tweak = sculptShape.getShape().inputs(type = "tweak")[0]
+    pm.delete(tweak)
     return sculptShape
 
-def clearGeometry(object):
+def closeDeformer(obj):
+    if obj.type() == "transform":
+        shape = obj.getShape()
+    elif obj.type() == "mesh":
+        shape = obj
+    else :
+        return False
+    deformers =[h for h in shape.listHistory() if h.hasAttr("envelope")]
+    for d in deformers:
+        d.envelope.set(0)
+    return True
     
-    shapes = object.getShapes()
+def openDeformer(obj):
+    if obj.type() == "transform":
+        shape = obj.getShape()
+    elif obj.type() == "mesh":
+        shape = obj
+    else :
+        return False
+    deformers =[h for h in shape.listHistory() if h.hasAttr("envelope")]
+    for d in deformers:
+        if not d.envelope.get():
+            d.envelope.set(1)
+    return True
+    
+def clearGeometry(obj):
+    
+    shapes = obj.getShapes()
     if shapes:
         for shape in shapes:
             if shape.isIntermediate() :
@@ -61,9 +91,10 @@ def getInfluenceWeight(baseShape, skinNode):
 def getWeightedInverseMatrix(numInfluence, bindPreMatrix, transformationMatrix, influenceWeight):
     finalMatrix = pm.dt.Matrix([0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0])
     for n in range(numInfluence):
-        print n
-        finalMatrix +=bindPreMatrix[n]*transformationMatrix[n]*influenceWeight[n]
-        print finalMatrix   
+        if transformationMatrix[n] :
+            finalMatrix +=bindPreMatrix[n]*transformationMatrix[n]*influenceWeight[n]  
+        else :
+            pass
     inverseMatrix = finalMatrix.inverse()
     return inverseMatrix
 
@@ -92,10 +123,12 @@ def doCorrection(baseShape, sculptShape):
     numInfluence = skinNode.numInfluenceObjects()
     bindPreMatrix = skinNode.bindPreMatrix.get()
     transformationMatrix = skinNode.matrix.get()
+    finalPositionStorage = []
     for i,v in enumerate(baseShape.vtx):
         base_pos = v.getPosition()
         sculpt_pos = sculptShape.vtx[i].getPosition()
         diff = sculpt_pos - base_pos
+        
         if diff.x >= -0.001 and diff.x <= 0.001 and diff.y >= -0.001 and diff.y <= 0.001 and diff.z >= -0.001 and diff.z <= 0.001:
             pass
         else :
@@ -105,15 +138,15 @@ def doCorrection(baseShape, sculptShape):
             else :
                 inverseMatrix = getWeightedInverseMatrix(numInfluence, bindPreMatrix, transformationMatrix, weight)
                 finalPosition = getFinalPosition(sculptShape, i, inverseMatrix)
+                finalPositionStorage.append(finalPosition)
                 setFinalPosition(sculptShape, i, finalPosition)
+                #dis = finalPosition - base_pos
+                #sculptShape.vtx[i].translateBy(dis)
 
 if __name__ == "__main__":
     base = getBaseShape()
     sculpt = duplicateSculptShape(base)
-    clearGeometry(sculpt)
     baseShape = base.getShape()
     sculptShape = sculpt.getShape()
     
     doCorrection(baseShape, sculptShape)
-    
-    
