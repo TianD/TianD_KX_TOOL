@@ -47,7 +47,12 @@ class KXTool(object):
         else :
             pass
 
-
+    def getPorjPath(self):
+        # get maya project
+        if "maya" in self.interpreter:
+            import pymel.core as pm
+            return pm.workspace(q=1, dir=1)
+        
     def getExcel(self, path = None):
 
         if path :
