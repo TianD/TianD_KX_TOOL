@@ -4,6 +4,12 @@ Created on 2015/7/8
 
 @author: TianD
 '''
+
+import sys
+
+path = "E:\\Scripts\\Eclipse\\TianD_KX_TOOL"
+path in sys.path or sys.path.append(path)
+
 import os
 
 import PyQt4.QtGui as QtGui
@@ -29,30 +35,12 @@ class ANIMInterceptTool(form_class, base_class):
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.setMaximumHeight(376)
         self.setMaximumWidth(203)
-        self.setWindowIcon(QtGui.QIcon("%s/bullet_deny.png" %uiPath))
-        self.check0Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
-        self.check1Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
-        self.check2Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
-        self.check3Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
-        self.check4Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
-        self.check5Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
-        self.check6Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
-        self.check7Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
-        self.check8Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
-        self.check9Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
-        self.check10Btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
         
-        self.check0Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
-        self.check1Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
-        self.check2Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
-        self.check3Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
-        self.check4Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
-        self.check5Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
-        self.check6Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
-        self.check7Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
-        self.check8Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
-        self.check9Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
-        self.check10Btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
+        self.setWindowIcon(QtGui.QIcon("%s/bullet_deny.png" %uiPath))
+        
+        for btn in self.findChildren(QtGui.QPushButton, QtCore.QRegExp("check\d+Btn")):
+            btn.setIcon(QtGui.QIcon("%s/question.png" %uiPath))
+            btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
         
         self.anim = ANIMIntercept()
         
@@ -465,6 +453,7 @@ def show():
     else :
         a = ANIMInterceptTool()
         a.show()
-        
+      
+show()  
 if __name__ == "__main__":
     show()
