@@ -10,17 +10,12 @@ Created on 2015年8月21日 下午5:02:44
 '''
 #coding:utf-8
 '''
-Created on 2015/7/8
+Created on 2015/8/24
 
 @author: TianD
 '''
-
-import sys
-
-path = "E:\\Scripts\\Eclipse\\TianD_KX_TOOL"
-path in sys.path or sys.path.insert(0,path)
-
 import os
+import itertools
 
 import PyQt4.QtGui as QtGui
 import PyQt4.QtCore as QtCore
@@ -42,7 +37,7 @@ class MODELInterceptTool(form_class, base_class):
         self.setupUi(self)
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.setMaximumHeight(376)
-        self.setMaximumWidth(203)
+        self.setMaximumWidth(200)
         
         self.setWindowIcon(QtGui.QIcon("%s/bullet_deny.png" %uiPath))
         
@@ -51,20 +46,21 @@ class MODELInterceptTool(form_class, base_class):
             btn.setStyleSheet('border-image:url(%s/question.png);' %uiPath)
         
         
-        self.check0Btn.clicked.connect(self.checkSceneName)               #物体历史
-        self.check1Btn.clicked.connect(self.getAnimCamera)                #位移变换
+        self.check0Btn.clicked.connect(self.modelHistory)               #物体历史
+        self.check1Btn.clicked.connect(self.modelTransform)                #位移变换
         
         self.checkAllBtn.clicked.connect(self.checkAll)
         self.skipAllBtn.clicked.connect(self.skipAll)
         
         self.flag0 = None
         self.flag1 = None
-
         
-        self.checkAll()
+        self.model = MODELIntercept()
+        
+        #self.checkAll()
                     
-    def checkSceneName(self):
-        flag = self.anim.checkSceneName()
+    def modelHistory(self):
+        flag = self.model.modelHistory()
         if flag :
             self.check0Btn.setIcon(QtGui.QIcon("%s/ok.png" %uiPath))
             self.check0Btn.setStyleSheet("border-image:url(%s/ok.png);" %uiPath)
@@ -76,47 +72,33 @@ class MODELInterceptTool(form_class, base_class):
         if self.flag0 is True:
             pass
         else :
-            pass
+            pm.select(self.model.historyResult)
     
-    def camScale1(self):
-        if self.flag1 is None:
-            pass
-        elif self.flag3 is None and self.flag1 is True:
-            flag = self.anim.camScale1()
-            if flag :
-                self.check3Btn.setIcon(QtGui.QIcon("%s/ok.png" %uiPath))
-                self.check3Btn.setStyleSheet("border-image:url(%s/ok.png);" %uiPath)
-                self.flag3 = True
-            else :
-                self.check3Btn.setIcon(QtGui.QIcon("%s/cancel.png" %uiPath))
-                self.check3Btn.setStyleSheet("border-image:url(%s/cancel.png);" %uiPath)
-                self.flag3 = False
-        elif self.flag3 is True:
-            pass
-        elif self.flag1 is False:
-            self.check3Btn.setIcon(QtGui.QIcon("%s/cancel.png" %uiPath))
-            self.check3Btn.setStyleSheet("border-image:url(%s/cancel.png);" %uiPath)
-            self.flag3 = False
-        elif self.flag3 is False and self.flag1 is True:
-            pm.select(self.anim.camera)
+    def modelTransform(self):
+        flag = self.model.modelTransform()
+        if flag :
+            self.check1Btn.setIcon(QtGui.QIcon("%s/ok.png" %uiPath))
+            self.check1Btn.setStyleSheet("border-image:url(%s/ok.png);" %uiPath)
+            self.flag1 = True
         else :
+            self.check1Btn.setIcon(QtGui.QIcon("%s/cancel.png" %uiPath))
+            self.check1Btn.setStyleSheet("border-image:url(%s/cancel.png);" %uiPath)
+            self.flag1 = False
+        if self.flag1 is True:
             pass
+        else :
+            pm.select(self.model.transformResult)
             
     def checkAll(self):
-        self.anim.getSceneName()
-        self.anim.analyzeSceneName()
-        if not self.skip9.checkState() :
-            self.flag9 = None
-            self.checkExt()
-        if not self.skip0.checkState():
+        if not self.skip0.checkState() :
             self.flag0 = None
-            self.checkSceneName()
-        if not self.skip1.checkState() :
+            self.modelHistory()
+        if not self.skip1.checkState():
             self.flag1 = None
-            self.getAnimCamera()        
+            self.modelTransform()
             
-        if (self.flag1 or self.skip1.checkState()) and \
-            (self.flag2 or self.skip2.checkState()):
+        if (self.flag0 or self.skip0.checkState()) and \
+            (self.flag1 or self.skip1.checkState()):
             self.close()
             return True
         else :
@@ -135,37 +117,60 @@ class MODELIntercept(kxTool.KXTool):
             2.位移清零;[OK]
         '''
         super(MODELIntercept, self).__init__()
-        self.getSceneName()
-        self.analyzeSceneName()
         self.topGroups = ["persp", "top", "front", "side", "char", "set", "prop"]
+        self.attrLst = ["%s%s" %x for x in itertools.product("trs","xyz")]
         
-    def checkSceneName(self):
-        try:
-            frameRange = pm.mel.eval('idmtProject -timeLine "%s.mb"' %self.sceneName)
-            if frameRange :
-                return True
-            else :
-                return False
-        except:
-            pass
+    def listMesh(self):
+        return pm.ls(type = "mesh")
+
+    def listTransform(self):
+        return [i for i in pm.ls(type = "transform") if i.name() not in self.topGroups]
+        
+    def modelHistory(self, mesh = None):
+        self.historyResult = []
+        if not mesh:
+            mesh = self.listMesh()
+        for i in mesh:
+            if not i.isIntermediate():
+                if i.listHistory():
+                    if len(i.listHistory()) == 1 and i.listHistory()[0] == i:
+                        pass
+                    else :
+                        if i not in self.historyResult:
+                            self.historyResult.append(i.name())
+        if self.historyResult :
+            return False
+        else :
+            return True
     
-    def getAnimCamera(self):
-        if self.sceneName:
-            cameraName = "cam_%s_%s_%s" %(self.episodeNumber, self.sessionNumber, self.sceneNumber)
-            try:
-                self.camera = pm.PyNode(cameraName)
-                self.topGroups.append(self.camera.getParent(-1))
-                return True
-            except:
-                return False
-    
+    def modelTransform(self, transform = None):
+        self.transformResult = []
+        if not transform:
+            transform = self.listTransform()
+        for i in transform:
+            for attr in self.attrLst:
+                if "s" not in attr:
+                    if i.getAttr(attr) != 0:
+                        if i not in self.transformResult:
+                            self.transformResult.append(i.name())
+                            break
+                else :
+                    if i.getAttr(attr) != 1:
+                        if i not in self.transformResult:
+                            self.transformResult.append(i.name())
+                            break
+        if self.transformResult:
+            return False
+        else :
+            return True
+                    
 def show():
     if uiTool.windowExisted("modelInterceptWindow"):
-        pass
+        return uiTool.toQtObject("modelInterceptWindow")
     else :
         a = MODELInterceptTool()
         a.show()
+        return uiTool.toQtObject("modelInterceptWindow")
       
-show()  
 if __name__ == "__main__":
     show()

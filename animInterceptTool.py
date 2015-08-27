@@ -453,7 +453,6 @@ def show():
     else :
         a = ANIMInterceptTool()
         a.show()
-      
-show()  
+        
 if __name__ == "__main__":
     show()
