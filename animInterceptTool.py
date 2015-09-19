@@ -413,7 +413,10 @@ class ANIMIntercept(kxTool.KXTool):
         cbAttr = self.camera.listAttr(k=1) + self.camera.getShape().listAttr(k=1)
         for attr in cbAttr:
             if not attr.isLocked():
-                return False
+                if "aiUserOptions" in attr.name() or "aiFiltermap" in attr.name() or "aiTranslator" in attr.name():
+                    pass
+                else :
+                    return False
             else :
                 pass
         return True

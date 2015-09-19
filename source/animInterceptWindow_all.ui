@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>223</width>
-    <height>324</height>
+    <height>406</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,13 +19,109 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,1">
+     <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0">
       <property name="horizontalSpacing">
        <number>6</number>
       </property>
       <property name="verticalSpacing">
        <number>10</number>
       </property>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label0">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>文件命名</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="2">
+       <widget class="QCheckBox" name="skip8">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>SKIP</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="1">
+       <widget class="QPushButton" name="check8Btn">
+        <property name="toolTip">
+         <string/>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="check0Btn">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QCheckBox" name="skip0">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>SKIP</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label9">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>文件格式不是mb</string>
+        </property>
+        <property name="text">
+         <string>文件格式</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="check9Btn">
+        <property name="toolTip">
+         <string>文件格式不是mb</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="skip9">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>SKIP</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
       <item row="6" column="1">
        <widget class="QPushButton" name="check5Btn"/>
       </item>
@@ -68,7 +164,7 @@
         </property>
        </widget>
       </item>
-      <item row="9" column="0">
+      <item row="10" column="0">
        <widget class="QLabel" name="label8">
         <property name="font">
          <font>
@@ -238,7 +334,7 @@
        <widget class="QPushButton" name="check4Btn">
         <property name="icon">
          <iconset>
-          <normaloff>Z:/Resouce/Support/ui/question-bold.png</normaloff>Z:/Resouce/Support/ui/question-bold.png</iconset>
+          <normaloff>../../../../ui/question-bold.png</normaloff>../../../../ui/question-bold.png</iconset>
         </property>
        </widget>
       </item>
@@ -260,80 +356,30 @@
       <item row="2" column="1">
        <widget class="QPushButton" name="check1Btn"/>
       </item>
-      <item row="9" column="1">
-       <widget class="QPushButton" name="check8Btn">
-        <property name="toolTip">
-         <string/>
+      <item row="9" column="0">
+       <widget class="QLabel" name="label10">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
         </property>
+        <property name="text">
+         <string>分辨率检查</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1">
+       <widget class="QPushButton" name="check10Btn">
         <property name="text">
          <string/>
         </property>
        </widget>
       </item>
       <item row="9" column="2">
-       <widget class="QCheckBox" name="skip8">
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-         </font>
+       <widget class="QCheckBox" name="skip10">
+        <property name="enabled">
+         <bool>false</bool>
         </property>
-        <property name="text">
-         <string>SKIP</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label0">
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>文件命名</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QCheckBox" name="skip0">
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>SKIP</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QPushButton" name="check0Btn">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label9">
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>文件格式</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QPushButton" name="check9Btn">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QCheckBox" name="skip9">
         <property name="font">
          <font>
           <pointsize>10</pointsize>
