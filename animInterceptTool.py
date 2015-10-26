@@ -389,7 +389,7 @@ class ANIMIntercept(kxTool.KXTool):
         
     def getNeedlessCamera(self):
         cameraLst = [cam.getParent() for cam in pm.ls(type = 'camera')]
-        self.needlessCamera = [cam for cam in cameraLst if cam not in self.defaultCameraNameLst and cam != self.camera]
+        self.needlessCamera = [cam for cam in cameraLst if cam not in self.defaultCameraNameLst and cam != self.camera and "_baked" not in cam.name()]
         if self.needlessCamera :
             return False
         else :
