@@ -4,12 +4,6 @@ Created on 2015/7/8
 
 @author: TianD
 '''
-
-import sys
-
-path = "E:\\Scripts\\Eclipse\\TianD_KX_TOOL"
-path in sys.path or sys.path.append(path)
-
 import os
 
 import PyQt4.QtGui as QtGui
