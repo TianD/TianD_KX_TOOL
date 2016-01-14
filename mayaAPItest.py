@@ -10,36 +10,113 @@ Created on 2015年9月7日 下午2:18:25
 '''
 import sys
 import pymel.core
-import maya.OpenMaya as OpenMaya
+import maya.OpenMaya as OpenMaya 
+import maya.OpenMayaMPx as OpenMayaMPx
 
+# consts
+kCopyNodeName = "TianDCopyNode"
+kCopyNodeId = OpenMaya.MTypeId(0x99000)
+
+kDefaultOffsetX = 0
+kDefaultOffsetY = 0
+kDefaultOffsetZ = 0
+
+class TianDCopyNode(OpenMayaMPx.MPxDeformerNode):
+
+    templateGeom = OpenMaya.MObject()
+    
+    def __init__(self):
+        super(TianDCopyNode, self).__init__()
+        
+    def deform(self, dataBlock, geomIter, matrix, geomIndex):
+        #
+        # get the envelope
+        envelope = OpenMayaMPx.cvar.MPxDeformerNode_envelope
+        envelopeHandle = dataBlock.inputValue(envelope)
+        envelopeValue = envelopeHandle.asFloat()
+        
+        # get the value of the templateGeom attribute
+        templateGeomHandle = dataBlock.inputValue(TianDCopyNode.templateGeom)
+        templateMesh = templateGeomHandle.asMesh()
+        
+        mfnTemplateMesh = OpenMaya.MFnMesh(templateMesh)
+        
+        templateVerticesArray = OpenMaya.MPointArray()
+        
+        mfnTemplateMesh.getPoints(templateVerticesArray)
+        
+        numTemplateVertices = mfnTemplateMesh.numVertices()
+        
+        for i in xrange(numTemplateVertices):
+            
+        
+        
+        inputGeom = OpenMayaMPx.cvar.MPxDeformerNode_inputGeom
+        
+
+# creator
+def nodeCreator():
+    return OpenMayaMPx.asMPxPtr(TianDCopyNode)
+         
+# initializer
+def nodeInitializer():
+        # template mesh
+        typedAttr = OpenMaya.MFnTypedAttribute()
+        typedAttr.create('templateMesh', 'template', OpenMaya.MFnData.kMesh)
+        try:
+                TianDCopyNode.addAttribute( TianDCopyNode.templateGeom )
+                outputGeom = OpenMayaMPx.cvar.MPxDeformerNode_outputGeom  
+                TianDCopyNode.attributeAffects( TianDCopyNode.templateGeom, outputGeom )
+        except:
+                sys.stderr.write( "Failed to create attributes of %s node\n", kCopyNodeName )
+        
+# initialize the script plug-in
+def initializePlugin(mobject):
+        mplugin = OpenMayaMPx.MFnPlugin(mobject)
+        try:
+                mplugin.registerNode( kCopyNodeName, kCopyNodeId, nodeCreator, nodeInitializer, OpenMayaMPx.MPxNode.kDeformerNode )
+        except:
+                sys.stderr.write( "Failed to register node: %s\n" % kCopyNodeName )
+
+# uninitialize the script plug-in
+def uninitializePlugin(mobject):
+        mplugin = OpenMayaMPx.MFnPlugin(mobject)
+        try:
+                mplugin.deregisterNode( kCopyNodeId )
+        except:
+                sys.stderr.write( "Failed to unregister node: %s\n" % kCopyNodeName )
+
+                
 ###
 # create original mesh
-numVertices = 5
-numPolygons = 2
+# numVertices = 5
+# numPolygons = 2
+# 
+# vertexLst = [[1,0,0],[0,1,0],[-1,0,0],[0,-1,0],[-2,-2,0]]
+# 
+# vertexArray = OpenMaya.MFloatPointArray()
+# 
+# for vertex in vertexLst:
 
-vertexLst = [[1,0,0],[0,1,0],[-1,0,0],[0,-1,0],[-2,-2,0]]
 
-vertexArray = OpenMaya.MFloatPointArray()
-
-for vertex in vertexLst:
-    omVertex = OpenMaya.MFloatPoint(vertex[0], vertex[1], vertex[2])
-    vertexArray.append(omVertex)
-
-mfnMesh = OpenMaya.MFnMesh()
-
-counts = [4,3]
-polygonCounts = OpenMaya.MIntArray()
-
-for i in counts:
-    polygonCounts.append(i)
-    
-connects = [0,1,2,3,4,3,2]
-polygonConnects = OpenMaya.MIntArray()
-
-for i in connects:
-    polygonConnects.append(int(i))
-    
-mfnMesh.create(numVertices, numPolygons, vertexArray, polygonCounts, polygonConnects)
+#     omVertex = OpenMaya.MFloatPoint(vertex[0], vertex[1], vertex[2])
+#     vertexArray.append(omVertex)
+# 
+# mfnMesh = OpenMaya.MFnMesh()
+# 
+# counts = [4,3]
+# polygonCounts = OpenMaya.MIntArray()
+# 
+# for i in counts:
+#     polygonCounts.append(i)
+#     
+# connects = [0,1,2,3,4,3,2]
+# polygonConnects = OpenMaya.MIntArray()
+# 
+# for i in connects:
+#     polygonConnects.append(int(i))
+#     
+# mfnMesh.create(numVertices, numPolygons, vertexArray, polygonCounts, polygonConnects)
 ###
 
 
@@ -111,7 +188,7 @@ mfnMesh.create(newNumVertices, newNumPolygons, newVertexArray, newPolygonCounts,
 #         vertexArrayCopy.clear()
 
 
-# faceList = OpenMaya.MIntArray()
+# faceList = OpenMaya.MIntArray()  
 # for i in xrange(numPolygons):
 #     faceList.append(i)
 # for i in xrange(copyNum):
