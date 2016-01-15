@@ -17,58 +17,104 @@ import maya.OpenMayaMPx as OpenMayaMPx
 kCopyNodeName = "TianDCopyNode"
 kCopyNodeId = OpenMaya.MTypeId(0x99000)
 
-kDefaultOffsetX = 0
-kDefaultOffsetY = 0
-kDefaultOffsetZ = 0
-
-class TianDCopyNode(OpenMayaMPx.MPxDeformerNode):
+class TianDCopyNode(OpenMayaMPx.MPxNode):
 
     templateGeom = OpenMaya.MObject()
+    sourceGeom = OpenMaya.MObject()
+    outputGeom = OpenMaya.MObject()
     
     def __init__(self):
         super(TianDCopyNode, self).__init__()
         
-    def deform(self, dataBlock, geomIter, matrix, geomIndex):
-        #
-        # get the envelope
-        envelope = OpenMayaMPx.cvar.MPxDeformerNode_envelope
-        envelopeHandle = dataBlock.inputValue(envelope)
-        envelopeValue = envelopeHandle.asFloat()
+    
+    def createMesh(self, sourceMesh, templateMesh, newOutputData):
         
-        # get the value of the templateGeom attribute
-        templateGeomHandle = dataBlock.inputValue(TianDCopyNode.templateGeom)
-        templateMesh = templateGeomHandle.asMesh()
+        mfnSourceMesh = OpenMaya.MFnMesh(sourceMesh)
         
         mfnTemplateMesh = OpenMaya.MFnMesh(templateMesh)
         
-        templateVerticesArray = OpenMaya.MPointArray()
+        numSourcePolygons = mfnSourceMesh.numPolygons()
+        numSourceVertices = mfnSourceMesh.numVertices()
         
-        mfnTemplateMesh.getPoints(templateVerticesArray)
+        copyNum = mfnTemplateMesh.numVertices()
+             
+        newNumVertices = numSourceVertices*copyNum
         
-        numTemplateVertices = mfnTemplateMesh.numVertices()
+        newNumPolygons = numSourcePolygons*copyNum
         
-        for i in xrange(numTemplateVertices):
+        vertexArray = OpenMaya.MFloatPointArray()
+         
+        mfnSourceMesh.getPoints(vertexArray)
+        
+        newVertexArray = OpenMaya.MFloatPointArray()
+        
+        for i in xrange(newNumVertices):
+            vertex = OpenMaya.MPoint()
+            mfnSourceMesh.getPoint(i%numSourceVertices, vertex)
+            vector = OpenMaya.MFloatVector(0,0,int(i/numSourceVertices)*offsetZ)
+            newVertex = OpenMaya.MFloatPoint(vertex.x + vector.x, vertex.y + vector.y, vertex.z + vector.z)
+            newVertexArray.append(newVertex)
+        
+        newPolygonCounts = OpenMaya.MIntArray()
+        
+        
+        for i in xrange(newNumPolygons):
+            newPolygonCounts.append(mfnMesh.polygonVertexCount(i%numSourcePolygons))
             
+        newPolygonConnects = OpenMaya.MIntArray()
         
+        for i in xrange(newNumPolygons):
+            vertexList = OpenMaya.MIntArray()
+            mfnSourceMesh.getPolygonVertices(i%numSourcePolygons, vertexList)
+            newPolygonConnects += [vertexID + (i/numSourcePolygons)*numSourceVertices for vertexID in vertexList]
+            
+        mfnMesh = OpenMaya.MFnMesh()
+        newMesh = mfnMesh.create(newNumVertices, newNumPolygons, newVertexArray, newPolygonCounts, newPolygonConnects, newOutputData)
         
-        inputGeom = OpenMayaMPx.cvar.MPxDeformerNode_inputGeom
+        return newMesh
         
+    
+    def compute(self, plug, dataBlock):
+        
+        if plug == TianDCopyNode.outputGeom:
+            templateHandle = dataBlock.inputValue(TianDCopyNode.templateGeom)
+            sourceHandle = dataBlock.inputValue(TianDCopyNode.sourceGeom)
+            outputHandle = dataBlock.outputValue(TianDCopyNode.outputGeom)
+            
+            templateMesh = templateHandle.asMesh()
+            sourceMesh = sourceHandle.asMesh()
+           
+            dataCreator = OpenMaya.MFnMeshData()
+            newOutputData = dataCreator.create()
+            
+            self.createMesh(sourceMesh, templateMesh, newOutputData)
+            
+            outputHandle.setMObject(newOutputData)
+            data.setClean(plug)
+        
+        else :
+            return OpenMaya.kUnknownParameter
 
 # creator
 def nodeCreator():
-    return OpenMayaMPx.asMPxPtr(TianDCopyNode)
+    return OpenMayaMPx.asMPxPtr(TianDCopyNode())
          
 # initializer
 def nodeInitializer():
         # template mesh
         typedAttr = OpenMaya.MFnTypedAttribute()
-        typedAttr.create('templateMesh', 'template', OpenMaya.MFnData.kMesh)
+        TianDCopyNode.templateGeom = typedAttr.create('templateMesh', 'template', OpenMaya.MFnData.kMesh)
+        TianDCopyNode.sourceGeom = typedAttr.create('sourceMesh', 'source', OpenMaya.MFnData.kMesh)
+        TianDCopyNode.outputGeom = typedAttr.create('outputMesh', 'out', OpenMaya.MFnData.kMesh)
+        
         try:
                 TianDCopyNode.addAttribute( TianDCopyNode.templateGeom )
-                outputGeom = OpenMayaMPx.cvar.MPxDeformerNode_outputGeom  
-                TianDCopyNode.attributeAffects( TianDCopyNode.templateGeom, outputGeom )
+                TianDCopyNode.addAttribute( TianDCopyNode.sourceGeom )
+                TianDCopyNode.addAttribute( TianDCopyNode.outputGeom )
+                TianDCopyNode.attributeAffects( TianDCopyNode.sourceGeom, TianDCopyNode.outputGeom )
+                TianDCopyNode.attributeAffects( TianDCopyNode.templateGeom, TianDCopyNode.outputGeom )
         except:
-                sys.stderr.write( "Failed to create attributes of %s node\n", kCopyNodeName )
+                sys.stderr.write( "Failed to create attributes of %s node\n" % kCopyNodeName )
         
 # initialize the script plug-in
 def initializePlugin(mobject):
@@ -129,11 +175,6 @@ mfnMesh = OpenMaya.MFnMesh(originalMesh)
 
 numPolygons = mfnMesh.numPolygons()
 numVertices = mfnMesh.numVertices()
-
-mergeVertices = True
-pointTolerance = 0.001
-
-vertexArrayCopy = OpenMaya.MPointArray()
 
 copyNum = 5
 
