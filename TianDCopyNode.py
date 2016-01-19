@@ -1,6 +1,6 @@
 #coding:utf-8
 '''
-Created on 2015��9��7�� ����2:18:25
+Created on 2016年1月16日  22:18:25
 
 @author: TianD
 
@@ -25,7 +25,6 @@ Created on 2015��9��7�� ����2:18:25
 
 
 import sys
-import pymel.core
 import maya.OpenMaya as OpenMaya 
 import maya.OpenMayaMPx as OpenMayaMPx
 

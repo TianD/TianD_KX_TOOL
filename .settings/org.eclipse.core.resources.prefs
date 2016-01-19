@@ -3,6 +3,7 @@ encoding//CorrectiveBlendShape/TianD_extractDeltas.py=utf-8
 encoding/<project>=UTF-8
 encoding/KX_Render_Tool.py=utf-8
 encoding/ReplaceReference.py=utf-8
+encoding/TianDCopyNode.py=utf-8
 encoding/TianD_CorrectiveBlendShape.py=utf-8
 encoding/__init__.py=utf-8
 encoding/animInterceptTool.py=utf-8
