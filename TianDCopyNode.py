@@ -48,6 +48,9 @@ class TianDCopyNode(OpenMayaMPx.MPxNode):
     
     def createMesh(self, sourceMesh, templateMesh, sizeShort, upaxisShort, spaceShort, newOutputData):
         
+        # 根据输入的sourceMesh 和templateMesh, 创建新的Mesh
+        # 新Mesh的形状是  将sourceMesh 复制到templateMesh 的每个点上形成的
+        #
         mfnSourceMesh = OpenMaya.MFnMesh(sourceMesh)
         
         mfnTemplateMesh = OpenMaya.MFnMesh(templateMesh)
@@ -55,37 +58,52 @@ class TianDCopyNode(OpenMayaMPx.MPxNode):
         numSourcePolygons = mfnSourceMesh.numPolygons()
         numSourceVertices = mfnSourceMesh.numVertices()
         
+        # copyNum 就是 templateMesh的点的数量
         copyNum = mfnTemplateMesh.numVertices()
-             
+        
+        # 新Mesh 包含的点的数量     
         newNumVertices = numSourceVertices*copyNum
         
+        # 新Mesh 包含的poly面的数量
         newNumPolygons = numSourcePolygons*copyNum
          
-        vertexArray = OpenMaya.MFloatPointArray()
-         
+        vertexArray = OpenMaya.MFloatPointArray() 
         mfnSourceMesh.getPoints(vertexArray)
         
         newVertexArray = OpenMaya.MPointArray()
-                
+        
         for i in xrange(newNumVertices):
+            
+            # 设置新Mesh 每个点的位置
+            # 如sourceMesh 是个box, 有8个点. templateMesh 是个grid, 有4个点.
+            # 那么新Mesh 就有8*4个点.
+            # 其中每8个点组成一个box, 并便宜到 templateMesh 的点的位置上.
+            #
+            # i%numSourceVertices 用于计算新Mesh的点序号对应到 sourceMesh 的点序号. 如i=8, i%numSourceVertices=8%8=0, 就是新Mesh 的第8号点对应到 sourceMesh 的第0号点
+            # int(i/numSourceVertices)%copyNum 用于计算新Mesh的点序号对应到 templateMesh 的点序号. 如 i=18, int(i/numSourceVertices)%copyNum=(18/8)%4=2%4=2, 就是新Mesh 的第18号点对应到 templateMesh 的第2号点.
+            
             vertex = OpenMaya.MPoint()
             mfnSourceMesh.getPoint(i%numSourceVertices, vertex)
             
             templateVertex = OpenMaya.MPoint()
             mfnTemplateMesh.getPoint(int(i/numSourceVertices)%copyNum, templateVertex, kSpaceDic[spaceShort])
             
+            # get templateMesh vertex's normal
             templateNormal = OpenMaya.MVector()
             mfnTemplateMesh.getVertexNormal(int(i/numSourceVertices)%copyNum, templateNormal, kSpaceDic[spaceShort])
             
+            # make custom coordinate system
             up = kAxisDic[upaxisShort]
             customA = templateNormal
             customB = (customA ^ up).normal()
             customC = customA ^ customB
                 
+            # make size matrix
             sMatrixLst = [sizeShort, 0, 0, 0, 0, sizeShort, 0, 0, 0, 0, sizeShort, 0, 0, 0, 0, 1]
             sMatrix = OpenMaya.MMatrix()
             OpenMaya.MScriptUtil.createMatrixFromList(sMatrixLst, sMatrix)
             
+            # make rotate matrix
             if upaxisShort == 0:  
                 rMatrixLst = [customA.x, customA.y, customA.z, 0, customB.x, customB.y, customB.z, 0, customC.x, customC.y, customC.z, 0, 0, 0, 0, 1]
             elif upaxisShort == 1:
@@ -95,20 +113,24 @@ class TianDCopyNode(OpenMayaMPx.MPxNode):
             rMatrix = OpenMaya.MMatrix()
             OpenMaya.MScriptUtil.createMatrixFromList(rMatrixLst, rMatrix)
             
+            # make move matrix
             tMatrixLst = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, templateVertex.x, templateVertex.y, templateVertex.z, 1]
             tMatrix = OpenMaya.MMatrix()
             OpenMaya.MScriptUtil.createMatrixFromList(tMatrixLst, tMatrix)
             
+            # translate newMesh vertex 
             newVertex = vertex*sMatrix*rMatrix*tMatrix
             newVertexArray.append(newVertex)   
         
         newPolygonCounts = OpenMaya.MIntArray()
         
+        # 根据SourceMesh 的poly的点的数量构造新Mesh 的poly点的数量
         for i in xrange(newNumPolygons):
             newPolygonCounts.append(mfnSourceMesh.polygonVertexCount(i%numSourcePolygons))
             
         newPolygonConnects = OpenMaya.MIntArray()
         
+        # 根据SourceMesh 的点的链接结构链接新Mesh 的点
         for i in xrange(newNumPolygons):
             vertexList = OpenMaya.MIntArray()
             mfnSourceMesh.getPolygonVertices(i%numSourcePolygons, vertexList)
@@ -153,6 +175,7 @@ def nodeCreator():
          
 # initializer
 def nodeInitializer():
+    
         # mesh attribute
         typedAttr = OpenMaya.MFnTypedAttribute()
         # input
@@ -202,7 +225,7 @@ def nodeInitializer():
             TianDCopyNode.addAttribute( TianDCopyNode.spaceAttr )
             TianDCopyNode.addAttribute( TianDCopyNode.upAxis )
             TianDCopyNode.addAttribute( TianDCopyNode.sizeAttr )
-            TianDCopyNode.addAttribute( TianDCopyNode.outputGeom )
+            TianDCopyNode.addAttribute( TianDCopyNode.outputGeom ) 
             TianDCopyNode.attributeAffects( TianDCopyNode.sourceGeom, TianDCopyNode.outputGeom )
             TianDCopyNode.attributeAffects( TianDCopyNode.templateGeom, TianDCopyNode.outputGeom )
             TianDCopyNode.attributeAffects( TianDCopyNode.spaceAttr, TianDCopyNode.outputGeom )
