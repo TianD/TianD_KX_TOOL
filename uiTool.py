@@ -4,7 +4,7 @@ Created on 2015年7月7日
 
 @author: TianD
 '''
-
+import os, glob
 import maya.OpenMayaUI as OpenMayaUI
 from PyQt4 import QtGui, QtCore, uic
 import sip
@@ -48,3 +48,18 @@ def windowExisted(mayaName):
         return True
     else :
         return False
+    
+def undoWrapper(func):
+    def doit(*args, **kwargs):
+        with pm.UndoChunk():
+            func(*args, **kwargs)
+    doit.__name__ ==func.__name__
+    doit.__doc__  ==func.__doc__  
+    return doit
+
+def getUIPath(filename):
+    allUIpath = os.environ['XBMLANGPATH'].split(';')
+    for p in allUIpath: 
+        for i in glob.glob("{0}/{1}".format(p, filename)):
+            return i
+    return None
