@@ -1,71 +1,59 @@
 #coding:gbk
 import re
 import pymel.core as pm
+import maya.OpenMayaAnim as OpenMayaAnim
+import utils
 
-ldt = {'L_':'R_', 'l_':'r_', 'left_':'right_', 'Left_':'Right_'}
-
-rdt = {'R_':'L_', 'r_':'l_', 'Right_':'Left_', 'right_':'left_'}
+dt = {'L_':'R_', 'l_':'r_', 'left_':'right_', 'Left_':'Right_', 'R_':'L_', 'r_':'l_', 'Right_':'Left_', 'right_':'left_'}
 
 def getMirrorCtrl(ctrl):
     ctrlName = ctrl.name()
-    mirrorCtrlName = ctrlName
-    flag = 0
-    for s, r in ldt.iteritems():
-        res = re.search(s, mirrorCtrlName)
-        if not res:
-            continue
-        if res.start() != 0 and mirrorCtrlName[res.start()-1] != '_':
-            continue
-        mirrorCtrlName = mirrorCtrlName[:res.start()] + r + mirrorCtrlName[res.end():]
-        flag += 1
-        
-    if not flag :
-        for s, r in rdt.iteritems():
-            res = re.search(s, mirrorCtrlName)
-            if not res:
-                continue
-            if res.start() != 0 and mirrorCtrlName[res.start()-1] != '_':
-                continue
-            mirrorCtrlName = mirrorCtrlName[:res.start()] + r + mirrorCtrlName[res.end():]
-    
-    if pm.objExists(mirrorCtrlName):
-        return pm.PyNode(mirrorCtrlName)
-    else:
-        return pm.duplicate(ctrl, name = mirrorCtrlName)[0]
+    for key, value in dt.iteritems():
+        if key in ctrlName:
+            mirrorCtrlName = ctrlName.replace(key, value)
+            return pm.PyNode(mirrorCtrlName)
+    return ctrl
 
-# def getMirrorCtrl(ctrl):
-#     ctrlName = ctrl.name()
-#     mirrorCtrlName = ctrlName
-#     if 'L_' in mirrorCtrlName or 'l_' in mirrorCtrlName:
-#         mirrorCtrlName = mirrorCtrlName.replace('L_', 'R_').replace('l_', 'r_')
-#     elif 'R_' in mirrorCtrlName or 'r_' in mirrorCtrlName:
-#         mirrorCtrlName = mirrorCtrlName.replace('R_', 'L_').replace('r_', 'l_')
-#     if 'Left_' in mirrorCtrlName or 'left_' in mirrorCtrlName:
-#         mirrorCtrlName = mirrorCtrlName.replace('Left_', 'Right_').replace('left_', 'right_')
-#     elif 'Right_' in mirrorCtrlName or 'right_' in mirrorCtrlName:
-#         mirrorCtrlName = mirrorCtrlName.replace('Right_', 'Left_').replace('right_', 'left_')
-#     
-#     if pm.objExists(mirrorCtrlName):
-#         return pm.PyNode(mirrorCtrlName)
-#     else:
-#         return pm.duplicate(ctrl, name = mirrorCtrlName)[0]
+def getBoxBuffer(ctrl):
+    ctrlName = ctrl.name()
+    return pm.PyNode("{0}_boxBuffer".format(ctrl))
            
-def getDriver(ctrl):
-    boxBuffer = pm.PyNode('%s_boxBuffer' %ctrl.name()) 
-    animUL = []
-    getAttrDrivenCurve(boxBuffer.tx, animUL)
-    getAttrDrivenCurve(boxBuffer.ty, animUL)
-    getAttrDrivenCurve(boxBuffer.tz, animUL)
-    boxControlName = animUL[0].split('tx')[0].split('ty')[0]
-    return pm.PyNode(boxControlName[:-1]), animUL
-    
-def getAttrDrivenCurve(thisNode, result = []):
-    for node in thisNode.inputs(scn=1):
-        if node.type() == 'animCurveUL' and node not in result:
-            result.append(node)
-        getAttrDrivenCurve(node, result)
-    return result
+def getAttrDrivenCurve(driver, driverAttr, driven, drivenAttr):
+    drivenCurveName = "{driver}_{driverAttr}_to_{driven}_{drivenAttr}".format(driver=driver.name(), driverAttr=driverAttr, driven=driven.name(), drivenAttr=drivenAttr)
+    if pm.objExists(drivenCurveName):
+        return pm.PyNode(drivenCurveName)
+    else :
+        return None 
+
+def getMirrorAttrDrivenCurve(animUL):
+    driverName, driverAttr, drivenName, drivenAttr = getDrivenName(animUL)
+    mirrorDriver = getMirrorCtrl(pm.PyNode(driverName))
+    mirrorDriven = getMirrorCtrl(pm.PyNode(drivenName))
+    mirrorAnimUL = getAttrDrivenCurve(mirrorDriver, driverAttr, mirrorDriven, drivenAttr)
+    if mirrorAnimUL:
+        pm.delete(mirrorAnimUL)
+    mirrorAnimULName = "{driver}_{driverAttr}_to_{driven}_{drivenAttr}".format(driver=mirrorDriver.name(), driverAttr=driverAttr, driven=mirrorDriven.name(), drivenAttr=drivenAttr)
+    mirrorAnimUL = pm.createNode("animCurveUL", name = mirrorAnimULName)
+    mfnAnimUL = mirrorAnimUL.__apimfn__()
+
+    for i in range(animUL.numKeys()):
+        input = animUL.getUnitlessInput(i)
+        value = animUL.getValue(i)
+        if driverAttr == 'tx' and drivenAttr == 'tx':
+            if input != 0:
+                newInput = -1*input
+                newValue = -1*value
+        elif driverAttr == 'tx' and drivenAttr != 'tx':
+            if input != 0:
+                newInput = -1*input
+                newValue = value
+        else :
+            newInput = input
+            newValue = value
+        mfnAnimUL.addKey(newInput, newValue, 1, 1)
         
+    return mirrorAnimUL
+
 def getDrivenName(animUL):
     animULName = animUL.name()
     driverName = animULName.split('_to_')[0][:-3]
@@ -74,55 +62,45 @@ def getDrivenName(animUL):
     drivenAttr = animULName[-2:]
     return driverName, driverAttr, drivenName, drivenAttr
 
-def mirrorDrivenCurve(animUL):
-    mirrorAnimUL = getMirrorCtrl(animUL)
-    driverName, driverAttr, drivenName, drivenAttr = getDrivenName(mirrorAnimUL)
-    if driverAttr == 'tx':
-        for i in range(animUL.numKeys()):
-            value = animUL.getValue(animUL.numKeys() - i - 1)
-            mirrorAnimUL.setValue(i, value)
-    if drivenAttr == 'tx':
-        for i in range(mirrorAnimUL.numKeys()):
-            value = mirrorAnimUL.getValue(i)
-            mirrorAnimUL.setValue(i, -1 * value)
-    pm.PyNode("%s.%s" %(driverName, driverAttr)) >> mirrorAnimUL.input
-    try:
-        mirrorAnimUL.output >> pm.PyNode("%s.%s" %(drivenName, drivenAttr))
-    except:
-        pass
-    return mirrorAnimUL    
-    
-def blendCurve(animUL1, animUL2):
-    driverName1, driverAttr1, drivenName1, drivenAttr1 = getDrivenName(animUL1)
-    driverName2, driverAttr2, drivenName2, drivenAttr2 = getDrivenName(animUL2)
-    if driverName1 == driverName2 and drivenName1 == drivenName2 and drivenAttr1 == drivenAttr2:
-        blendNode = pm.createNode("blendWeighted")
-        animUL1.output >> blendNode.input[0]
-        animUL2.output >> blendNode.input[1]
-        blendNode.output >> pm.PyNode("%s.%s" %(drivenName1, drivenAttr1))
-    else :
-        print u"{0},{1}驱动的不是同一个属性, 或者不是被同一个节点驱动.".format(animUL1.name(), animUL2.name())
-        
-def setMirrorDrivenKey(ctrl):
-    mirrorCtrl = getMirrorCtrl(ctrl)
-    boxCtrl, animULs = getDriver(ctrl)
-    mirrorBoxCtrl = getMirrorCtrl(boxCtrl)
-    blendGroup = dict()
-    for animUL in animULs:
-        mirrorAnimUL = mirrorDrivenCurve(animUL)
-        driverName, driverAttr, drivenName, drivenAttr = getDrivenName(mirrorAnimUL)
-        blendGroup.setdefault(drivenAttr, list()).append(mirrorAnimUL)
-        
-    for key, value in blendGroup.items():
-        if len(value) > 1 :
-            blendCurve(value[0], value[1])
+def mirrorDrivenCurve(driver, driverAttr, driven, drivenAttr):
+    mirrorDriver = getMirrorCtrl(driver)
+    mirrorDriven = getMirrorCtrl(driven)
+    animUL = getAttrDrivenCurve(driver, driverAttr, driven, drivenAttr)
+    if not animUL:
+        return False
+    mirrorAnimUL = getMirrorAttrDrivenCurve(animUL)
 
+    pm.PyNode("%s.%s" %(mirrorDriver.name(), driverAttr)) >> mirrorAnimUL.input
+    if pm.PyNode("%s.%s" %(mirrorDriven.name(), drivenAttr)).isConnected():
+        source = pm.PyNode("%s.%s" %(mirrorDriven.name(), drivenAttr)).inputs()
+        if source[0].type() == "blendWeighted":
+            inputs = source[0].input.elements()
+            nextInput = re.sub("(?P<number>\d+)", utils._add1, inputs[-1])
+            mirrorAnimUL.output >> pm.PyNode("{0}.{1}".format(source[0].name(), nextInput))
+            source[0].output >> pm.PyNode("%s.%s" %(mirrorDriven.name(), drivenAttr))
+        elif source[0].type() == "animCurveUL":
+            blendWeighted = pm.createNode("blendWeighted")
+            source[0].output >> blendWeighted.input[0]
+            mirrorAnimUL.output >> blendWeighted.input[1]
+            blendWeighted.output >> pm.PyNode("%s.%s" %(mirrorDriven.name(), drivenAttr))
+        else :
+            raise "unidentifiable input connections!!!"
+    else :
+        mirrorAnimUL.output >> pm.PyNode("%s.%s" %(mirrorDriven.name(), drivenAttr))
+    return mirrorAnimUL    
+             
+def setMirrorDrivenKey(ctrl, boxCtrl):
+    boxBuffer = getBoxBuffer(ctrl)
+    for driverAttr in ['tx', 'ty']:
+        for drivenAttr in ['tx', 'ty', 'tz', 'rx', 'ry', 'rz']:
+            mirrorAnimUL = mirrorDrivenCurve(boxCtrl, driverAttr, boxBuffer, drivenAttr)
+            
 def run():
     sel = pm.ls(sl=1)
     if sel:
-        setMirrorDrivenKey(sel[0])
+        setMirrorDrivenKey(sel[0], sel[1])
     else :
-        raise u"请选择一个控制器."
+        raise u"请选择一个ctrl和一个boxCtrl."
 if __name__ == "__main__":
     run()
     

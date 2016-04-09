@@ -39,14 +39,16 @@ class BeautifyClothToolWin(form_class, base_class):
         
     def createCmd(self):
         sel = pm.ls(sl=1)
+        selVertex = convert.toVertex(sel)
         BCCs = getBCC()
         if BCCs:
             maxNum = int(BCCs[-1].name().split('BCT_ctrl')[-1].split('_MASTER')[0])
         else :
             maxNum = 0
-        cluster = createCluster(sel, "BCT_ctrl{0}".format(maxNum+1))
-        fol = createFol(sel, "BCT_ctrl{0}".format(maxNum+1))
+        cluster = createCluster(selVertex, "BCT_ctrl{0}".format(maxNum+1))
+        fol = createFol(selVertex, "BCT_ctrl{0}".format(maxNum+1))
         ctrl = createCtrl(fol, cluster[1], "BCT_ctrl{0}".format(maxNum+1))
+        pm.select(ctrl)
         
     def paintCmd(self):
         sel = pm.ls(sl=1)
@@ -132,13 +134,13 @@ def createCtrl(fol, clusterHandle, name):
     
     currentTime = pm.currentTime(q=1)
     ctrl.t.setKey(t = currentTime)
-    ctrl.t.setKey(t = currentTime + 1)
-    ctrl.t.setKey(t = currentTime - 1)
+    ctrl.t.setKey(t = currentTime + 5)
+    ctrl.t.setKey(t = currentTime - 5)
     ctrl.r.setKey(t = currentTime)
-    ctrl.r.setKey(t = currentTime + 1)
-    ctrl.r.setKey(t = currentTime - 1)
+    ctrl.r.setKey(t = currentTime + 5)
+    ctrl.r.setKey(t = currentTime - 5)
     
-    return masterGrp    
+    return ctrl    
     
 def run():
     win = BeautifyClothToolWin()

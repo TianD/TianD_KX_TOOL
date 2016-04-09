@@ -20,16 +20,19 @@ class KXTool(object):
         self.excelPath = "C:\\Users\\huiguoyu\\Desktop"
         self.defaultCameraNameLst = ['persp', 'top', 'front', 'side']
         self.sceneName = ''
+        self.scenePath = ''
         self.interpreter = sys.executable
         
     def getSceneName(self):
         if "Nuke" in self.interpreter:
             import nuke
             root = nuke.toNode("root")
-            self.sceneName = root.name().split("/")[-1].split(".")[0]
+            self.scenePath = os.path.dirname(root.name())
+            self.sceneName, self.ext = os.path.splitext(os.path.basename(root.name()))
         elif "maya" in self.interpreter:
             import pymel.core as pm
             self.sceneName = pm.Env().sceneName().namebase
+            self.scenePath = "%s" %pm.Env().sceneName().dirname()
             self.ext = pm.Env().sceneName().ext
         else :
             pass
