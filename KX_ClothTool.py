@@ -98,8 +98,6 @@ def nClothCmd(*args, **kwargs):
     
     sel = pm.ls(sl=1)
     
-    [i.v.set(0) for i in sel]
-    
     outputGrpName = 'output_Grp'
     
     clothGrpName = 'cloth_Grp'
@@ -123,6 +121,8 @@ def nClothCmd(*args, **kwargs):
     outputGeos = [pm.duplicate(i, name = i.name().replace("_anim", "_output"))[0] for i in sel]
     
     [outputGeo.setParent(outputGrp) for outputGeo in outputGeos]
+    
+    [i.v.set(0) for i in sel]
             
     pm.select(clothGeos)
     
@@ -133,14 +133,71 @@ def nClothCmd(*args, **kwargs):
 def qClothCmd(*args, **kwargs):
     '''
     create qCloth
+    
+    step 1: Select an anim geo
+    step 2: Duplicate a cloth geo and a output geo from the anim geo
+    step 3: Do blendshape both anim geo and cloth geo with output geo
+    step 4: Create QCloth on cloth geo
     '''
-    print 'qClothCmd'
+    
+    try:
+        pm.loadPlugin("qualoth-2014-x64.mll")
+    except:
+        pass
+    
+    sel = pm.ls(sl=1)
+    
+    outputGrpName = 'output_Grp'
+    
+    clothGrpName = 'cloth_Grp'
+    
+    if pm.objExists(outputGrpName):
+        outputGrp = pm.PyNode(outputGrpName)
+    else :
+        outputGrp = pm.createNode('transform', name = outputGrpName)
+    
+    outputGrp.v.set(0)
+    
+    if pm.objExists(clothGrpName):
+        clothGrp = pm.PyNode(clothGrpName)
+    else :
+        clothGrp = pm.createNode('transform', name = clothGrpName)
+        
+    outputGeos = [pm.duplicate(i, name = i.name().replace("_anim", "_output"))[0] for i in sel]
+    
+    [outputGeo.setParent(outputGrp) for outputGeo in outputGeos]
+    
+    [i.v.set(0) for i in sel]
+    
+    clothShape = []
+    for i in sel:
+        pm.select(i)
+        clothShape.append(pm.mel.qlCreateCloth())
+    
+    clothGeos = [pm.PyNode(i).outputMesh.outputs(p=0)[0] for i in clothShape]
+    
+    [clothGeo.setParent(clothGrp) for clothGeo in clothGeos]
+    
+    blendNodes = [pm.blendShape(sel[i], clothGeos[i], outputGeos[i], w = [(0,0), (1,1)]) for i in range(len(sel))]
     
 def importCmd(*args, **kwargs):
     '''
     import cache to original file
+    step 1: create geometry cache for cloth geo
+    step 2: open original anim file
+    step 3: import the geometry cache to geos which export to cloth
     '''
-    print 'importCmd'
+    outputGrpName = 'output_Grp'
+    
+    if pm.objExists(outputGrpName):
+        outputGrp = pm.PyNode(outputGrpName)
+    else :
+        pm.error("Maya Node does not exist: {0}".format(outputGrpName))
+        
+    outputGeos = outputGrp.getChildren()
+    
+    
+    
 
 def paintCmd(*args, **kwargs):
     '''
@@ -155,7 +212,6 @@ def bctCmd(*args, **kwargs):
     import BeautifyClothTool as BCT
     reload(BCT)
     BCT.run()  
-    
     
 if __name__ == "__main__":
     showUI()
