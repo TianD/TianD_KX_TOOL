@@ -14,7 +14,7 @@ Created on 2016年3月15日 下午2:46:31
 import pymel.core as pm
 import re
 
-mirrorDic = {'L_':'R_', 'l_':'r_', 'left_':'right_', 'Left_':'Right_', 'R_':'L_', 'r_':'l_', 'Right_':'Left_', 'right_':'left_'}
+mirrorDic = {'L_':'R_', 'l_':'r_', 'left_':'right_', 'Left_':'Right_', 'R_':'L_', 'r_':'l_', 'Right_':'Left_', 'right_':'left_', '_RU_':'_LU_', '_RD_':'_LD_'}
 
 def getMirror(object):
     if isinstance(object, basestring):

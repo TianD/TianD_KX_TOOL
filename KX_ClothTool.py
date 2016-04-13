@@ -20,11 +20,12 @@ def showUI():
     with pm.window('KX_ClothING', title = 'KX_Clothing') as win:
         with pm.rowColumnLayout('mainLayout', numberOfColumns = 2) as mainLayout:
             selectBtn = pm.button(label = u'添加要导出的模型', c = selectCmd)
-            exportBtn = pm.button(label = u'导出', c = exportCmd)
+            exportBtn = pm.button(label = u'导出并创建解算场景', c = exportCmd)
             nClothBtn = pm.button(label = u'创建NCloth布料', c = nClothCmd)
             qClothBtn = pm.button(label = u'创建QCloth布料', c = qClothCmd)
             paintBtn = pm.button(label = u'调整动画权重', c = paintCmd)
-            importBtn = pm.button(label = u'导入', c = importCmd)
+            createBtn = pm.button(label = u'生成布料缓存', c = createCmd)
+            importBtn = pm.button(label = u'导入布料缓存', c = importCmd)
             bctBtn = pm.button(label = u'布料修穿工具', c = bctCmd)
            
     win.show()
@@ -54,7 +55,7 @@ def exportCmd(*args, **kwargs):
     sceneName = kx.sceneName
     scenePath = kx.scenePath
     
-    cachePath = "{path}/{name}_cloth.abc".format(path = scenePath.replace('scenes', 'cache/alembic'), name = sceneName)
+    cachePath = "{path}/{name}/{name}_cloth.abc".format(path = scenePath.replace('scenes', 'cache/alembic'), name = sceneName)
     cacheFile = file.compileFileName(cachePath)
     fileName = file.compileFileName("{path}/{name}_cloth.mb".format(path = scenePath, name = sceneName))
     
@@ -180,13 +181,16 @@ def qClothCmd(*args, **kwargs):
     
     blendNodes = [pm.blendShape(sel[i], clothGeos[i], outputGeos[i], w = [(0,0), (1,1)]) for i in range(len(sel))]
     
-def importCmd(*args, **kwargs):
+
+def createCmd(*args, **kwargs):
     '''
-    import cache to original file
-    step 1: create geometry cache for cloth geo
-    step 2: open original anim file
-    step 3: import the geometry cache to geos which export to cloth
+    create cloth geometry cache
     '''
+    kx = kxTool.KXTool()
+    kx.getSceneName()
+    sceneName = kx.sceneName
+    scenePath = kx.scenePath
+    
     outputGrpName = 'output_Grp'
     
     if pm.objExists(outputGrpName):
@@ -196,7 +200,20 @@ def importCmd(*args, **kwargs):
         
     outputGeos = outputGrp.getChildren()
     
-    
+    for geo in outputGeos:
+        cacheFile = "{path}/{scene}/{name}.mcc".format(path = scenePath.replace('scene', 'cache/nCache'), scene = sceneName, name = geo.name())
+        cache.exportMCCache(geo, cacheFile)
+        cache.importMCCache(geo, cacheFile)
+
+def importCmd(*args, **kwargs):
+    '''
+    import cache to original file
+    step 1: find geometry cache for cloth geo
+    step 2: open original anim file
+    step 3: import the geometry cache to geos which export to cloth
+    '''
+    print 'importCmd'
+
     
 
 def paintCmd(*args, **kwargs):

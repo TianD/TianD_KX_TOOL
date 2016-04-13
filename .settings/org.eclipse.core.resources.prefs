@@ -1,5 +1,7 @@
 eclipse.preferences.version=1
 encoding//CorrectiveBlendShape/TianD_extractDeltas.py=utf-8
+encoding//TFM_mirrorPose/mirrorPose.py=utf-8
+encoding//TianDNode/TianDCopyNode.py=utf-8
 encoding//utils/__init__.py=utf-8
 encoding//utils/convert.py=utf-8
 encoding//utils/file.py=utf-8
@@ -17,7 +19,6 @@ encoding/animTool.py=utf-8
 encoding/deleteGroupId.py=utf-8
 encoding/kxTool.py=utf-8
 encoding/mappingXml.py=utf-8
-encoding/mirrorPose.py=utf-8
 encoding/modelInterceptTool.py=utf-8
 encoding/reorderSequence.py=utf-8
 encoding/scaleImage.py=utf-8

@@ -10,6 +10,7 @@ Created on 2016年3月14日 下午8:02:55
 
 @Description: mirror pose 
 '''
+import os.path
 
 import pymel.core as pm
 import maya.OpenMaya as OpenMaya
@@ -17,40 +18,47 @@ import maya.OpenMayaAnim as OpenMayaAnim
 
 import utils.mirror as mirror
 
-def mirrorFacePose(character):
+def readControlsInfo(selection, info = '{0}/faceControls.info'.format(os.path.dirname(__file__))):
+    namespace = selection.namespace()
+    controlSet = []
+    with open(info) as f:
+        for line in f.readlines():
+            try:
+                control = pm.PyNode('{0}{1}'.format(namespace, line[:-2]))
+            except:
+                print '{0}{1} is not existed!'.format(namespace, line[:-2])
+                control = None
+            if control and not control.isLocked():
+                controlSet.append(control)
+                
+    return controlSet       
+
+def mirrorFacePose(controlSet):
     '''
     mirror the select character's facial pose
     '''
     currentTime = pm.currentTime()     
-    poseDic = getPoseDic(character)
+    poseDic = getPoseDic(controlSet)
     for k, v in poseDic.iteritems():
         mirrork = mirror.getMirror(k)
         if poseDic.has_key(mirrork):
-            if pm.PyNode(k).shortName() == 'tx':
+            if pm.PyNode(k).shortName() == 'tx' or pm.PyNode(k).shortName() == 'rx':
                 value = -1 * poseDic[mirrork]
             else :
                 value = poseDic[mirrork]
             pm.PyNode(k).set(value)
             pm.PyNode(k).setKey()
             
-            
-    
-def mirrorBodyPose(character):
+                
+def mirrorBodyPose(controlSet):
     '''
     mirror the select character's body pose
     '''
     pass
-
-def getCharacterSet(selection):
-    if selection:
-        character = selection.inputs(type = 'objectSet')
-        if character:
-            return character[0]
-
         
-def getPoseDic(character):
+def getPoseDic(controlSet):
     poseDic = dict()
-    for attr in character.members():
+    for attr in controlSet:
         key = attr.name()
         value = attr.get()
         poseDic.setdefault(key, value)
@@ -58,8 +66,8 @@ def getPoseDic(character):
 
 def runFace():
     sel = pm.ls(sl=1)
-    character = getCharacterSet(sel[0])
-    mirrorFacePose(character)
+    controlSet = readControlsInfo(sel[0])
+    mirrorFacePose(controlSet)
     
 if __name__ == "__main__":
     runFace
