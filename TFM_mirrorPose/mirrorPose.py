@@ -54,7 +54,19 @@ def mirrorBodyPose(controlSet):
     '''
     mirror the select character's body pose
     '''
-    pass
+    currentTime = pm.currentTime()     
+    poseDic = getPoseDic(controlSet)
+    for k, v in poseDic.iteritems():
+        mirrork = mirror.getMirror(k)
+        if poseDic.has_key(mirrork):
+            if pm.PyNode(k).shortName() == 'tx':
+                value = -1 * poseDic[mirrork]
+            elif mirrork == k and  pm.PyNode(k).shortName() == 'rz':
+                value = -1 * poseDic[mirrork]
+            else :
+                value = poseDic[mirrork]
+            pm.PyNode(k).set(value)
+            pm.PyNode(k).setKey()
         
 def getPoseDic(controlSet):
     poseDic = dict()
@@ -68,6 +80,12 @@ def runFace():
     sel = pm.ls(sl=1)
     controlSet = readControlsInfo(sel[0])
     mirrorFacePose(controlSet)
+
+def runBody():
+    sel = pm.ls(sl=1)
+    controlSet = readControlsInfo(sel[0], info = '{0}/bodyControls.info'.format(os.path.dirname(__file__)))
+    mirrorBodyPose(controlSet)
     
 if __name__ == "__main__":
-    runFace
+    runFace()
+    runBody()

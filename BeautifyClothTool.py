@@ -38,7 +38,7 @@ class BeautifyClothToolWin(form_class, base_class):
         self.allBtn.clicked.connect(self.allCmd)
         
     def createCmd(self):
-        sel = pm.ls(sl=1)
+        sel = pm.ls(sl=1, fl=1)
         selVertex = convert.toVertex(sel)
         BCCs = getBCC()
         if BCCs:

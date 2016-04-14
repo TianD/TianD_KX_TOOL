@@ -14,7 +14,9 @@ import pymel.core as pm
 def toVertex(selection):
     objects = set()
     for sel in selection:
-        if isinstance(sel, pm.general.MeshEdge) or isinstance(sel, pm.general.MeshFace):
+        if isinstance(sel, pm.general.MeshFace):
+            objects |= set([pm.PyNode('{0}.vtx[{1}]'.format(sel.node().name(), i)) for i in sel.getVertices()])
+        elif isinstance(sel, pm.general.MeshEdge):
             objects |= set(sel.connectedVertices())
         elif isinstance(sel, pm.general.MeshVertex):
             objects.add(sel)
