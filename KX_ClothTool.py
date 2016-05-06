@@ -14,7 +14,7 @@ import os.path
 import pymel.core as pm
 import kxTool
 import utils.cache as cache
-import utils.file as file
+import utils.name as name
 
 def showUI():
     with pm.window('KX_ClothING', title = 'KX_Clothing') as win:
@@ -56,8 +56,8 @@ def exportCmd(*args, **kwargs):
     scenePath = kx.scenePath
     
     cachePath = "{path}/{name}/{name}_cloth.abc".format(path = scenePath.replace('scenes', 'cache/alembic'), name = sceneName)
-    cacheFile = file.compileFileName(cachePath)
-    fileName = file.compileFileName("{path}/{name}_cloth.mb".format(path = scenePath, name = sceneName))
+    cacheFile = name.compileFileName(cachePath)
+    fileName = name.compileFileName("{path}/{name}_cloth.mb".format(path = scenePath, name = sceneName))
     
     geos = pm.PyNode('kx_cloth_export_layer').listMembers()
     exportGeos = []

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>239</width>
+    <height>41</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>SmoothSetTool</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QLabel" name="smoothLabel">
+      <property name="text">
+       <string>smooth_set</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QComboBox" name="smoothComboBox">
+      <item>
+       <property name="text">
+        <string>smooth_0</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>smooth_1</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>smooth_2</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="smoothPushButton">
+      <property name="text">
+       <string>add</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

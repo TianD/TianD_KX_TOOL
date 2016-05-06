@@ -7,6 +7,10 @@ Created on 2015年10月29日 上午11:24:52
 @E-mail: tiandao_dunjian@sina.cn
 
 @Q    Q: 298081132
+
+@Description: replace low geo with high geo
+
+@Declaration: It's free for everybody and welcome to point out mistakes.
 '''
 import pymel.core as pm
 
@@ -14,7 +18,9 @@ import lightRenderData
 
 def startReplaceL2H():
     projDic = {
-               'SENBA': ['_l_', '_h_']
+               'XFTL': ['_l_', '_h_'],
+               'SENBA': ['_l_', '_h_'],
+               'ROCK': ['_l_', '_h_']
                 }
     fromto = []
     env = pm.Env()

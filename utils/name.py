@@ -11,7 +11,6 @@ Created on 2016年4月6日 下午5:46:48
 @Description:
 '''
 
-import os.path
 import re
 from functools import partial
 
@@ -27,6 +26,8 @@ def _add1(groupName, matched):
 
 
 def compileFileName(filePath):
+    import os.path
+    
     if not os.path.exists(filePath):
         return filePath
     pathWithoutExt, ext = os.path.splitext(filePath)
@@ -34,5 +35,13 @@ def compileFileName(filePath):
     newFilePath =  "{0}{1}".format(newPathWithoutExt, ext)
     return compileFileName(newFilePath)
 
+def compileNodeName(nodeName):
+    import pymel.core as pm
+    
+    if not pm.objExists(nodeName):
+        return nodeName
+    newNodeName = re.sub("(?P<number>\d*)$", partial(_add1, 'number'), nodeName)
+    return compileNodeName(newNodeName)
+    
 if __name__ == "__main__":
     print compileFileName("E:\\test\\image\\Oceab_v3_Ocean_1001.tif")
