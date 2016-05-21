@@ -3,6 +3,14 @@
 Created on 2015/7/8
 
 @author: TianD
+
+@E-mail: tiandao_dunjian@sina.cn
+
+@Q    Q: 298081132
+
+@Description: check animtion file
+
+@Declaration: It's free for everybody and welcome to point out mistakes.
 '''
 import os
 
@@ -18,7 +26,7 @@ reload(uiTool)
 
 import playblasterUI
 
-uiPath = os.environ['XBMLANGPATH'].split(";")[1] + "/TianD_KX_TOOL"
+uiPath = uiTool.getUIPath("TianD_KX_TOOL")
 form_class, base_class = uic.loadUiType('%s/animInterceptWindow_all.ui' %uiPath)
 class ANIMInterceptTool(form_class, base_class):
     
@@ -336,7 +344,8 @@ class ANIMIntercept(kxTool.KXTool):
             resolution = pm.PyNode("defaultResolution")
             width = resolution.width.get()
             height = resolution.height.get()
-            if width == 1920 and height == 1080 :
+            print self.projectName
+            if width == self.resolutionDic[self.projectName][0] and height == self.resolutionDic[self.projectName][1] :
                 return True
             else :
                 return False
@@ -383,7 +392,10 @@ class ANIMIntercept(kxTool.KXTool):
         
     def getNeedlessCamera(self):
         cameraLst = [cam.getParent() for cam in pm.ls(type = 'camera')]
-        self.needlessCamera = [cam for cam in cameraLst if cam not in self.defaultCameraNameLst and cam != self.camera and "_baked" not in cam.name()]
+        if self.projectName == 'ROCK':
+            self.needlessCamera = [cam for cam in cameraLst if cam not in self.defaultCameraNameLst and cam != self.camera and "_baked" not in cam.name() and 'CamL' not in cam.name() and 'CamR' not in cam.name()]
+        else :
+            self.needlessCamera = [cam for cam in cameraLst if cam not in self.defaultCameraNameLst and cam != self.camera and "_baked" not in cam.name()]
         if self.needlessCamera :
             return False
         else :
@@ -404,7 +416,10 @@ class ANIMIntercept(kxTool.KXTool):
             return True
     
     def camLock(self):
-        cbAttr = self.camera.listAttr(k=1) + self.camera.getShape().listAttr(k=1)
+        if self.projectName == 'ROCK':
+            cbAttr = [pm.PyNode('{0}.{1}'.format(self.camera.name(), attr)) for attr in ['tx','ty','tz','rx','ry','rz','sx','sy','sz','v']]
+        else :
+            cbAttr = self.camera.listAttr(k=1) + self.camera.getShape().listAttr(k=1)
         for attr in cbAttr:
             if not attr.isLocked():
                 if "aiUserOptions" in attr.name() or "aiFiltermap" in attr.name() or "aiTranslator" in attr.name():

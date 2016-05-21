@@ -11,17 +11,33 @@ import re, glob
 
 import lightRenderData as lRD
 
+
+
+
 class KXTool(object):
 
     def __init__(self):
         '''
                 用于凯旋项目，所有TianD功能的基类
         '''
-        self.excelPath = "C:\\Users\\huiguoyu\\Desktop"
         self.defaultCameraNameLst = ['persp', 'top', 'front', 'side']
         self.sceneName = ''
         self.scenePath = ''
         self.interpreter = sys.executable
+        
+        self.resolutionDic = {
+                            'XFTL': [1920, 1080, 1.777],
+                            'SB': [1920, 1080, 1.777],
+                            'GX': [1920, 1080, 1.777],
+                            'ROCK': [2048, 858, 2.387]
+                            }
+
+        self.fpsDic = {
+                       'XFTL': 'pal',
+                        'SB': 'pal',
+                        'GX': 'pal',
+                        'ROCK': 'film'
+                       }
         
     def getSceneName(self):
         if "Nuke" in self.interpreter:
@@ -66,7 +82,13 @@ class KXTool(object):
             self.versionNumber = nameMatch.getResults('version_number')
             self.sceneDescribe = nameMatch.getResults('scene_describe')
         else :
-            pass
+            self.projectName = ''                    #项目名称
+            self.episodeNumber =  ''                  #集数
+            self.sessionNumber = ''                     #场号
+            self.sceneNumber = ''                         #镜头号
+            self.processName = ''       #环节版本
+            self.versionNumber = ''
+            self.sceneDescribe = ''
 
     def getPorjPath(self):
         # get maya project
