@@ -1,7 +1,11 @@
 eclipse.preferences.version=1
+encoding//CameraCrossPlatformIO/__init__.py=utf-8
+encoding//CameraCrossPlatformIO/export.py=utf-8
+encoding//CameraCrossPlatformIO/import.py=utf-8
 encoding//CorrectiveBlendShape/TianD_extractDeltas.py=utf-8
 encoding//TFM_mirrorPose/mirrorPose.py=utf-8
 encoding//TianDNode/TianDCopyNode.py=utf-8
+encoding//core/projectDict.py=utf-8
 encoding//utils/__init__.py=utf-8
 encoding//utils/convert.py=utf-8
 encoding//utils/mirror.py=utf-8

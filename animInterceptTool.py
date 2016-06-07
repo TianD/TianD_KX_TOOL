@@ -372,9 +372,9 @@ class ANIMIntercept(kxTool.KXTool):
     
     def getAnimCamera(self):
         if self.sceneName:
-            cameraName = "cam_%s_%s_%s" %(self.episodeNumber, self.sessionNumber, self.sceneNumber)
+            cameraName = "cam_%s_%s_(%s|%s)" %(self.episodeNumber, self.sessionNumber, self.sceneNumber, self.sceneNumber.upper())
             try:
-                self.camera = pm.PyNode(cameraName)
+                self.camera = pm.ls(regex = cameraName)[0]
                 self.topGroups.append(self.camera.getParent(-1))
                 return True
             except:

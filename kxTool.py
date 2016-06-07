@@ -39,6 +39,13 @@ class KXTool(object):
                         'ROCK': 'film'
                        }
         
+        self.stereoDic = {
+                        'XFTL': 0,
+                        'SB': 0,
+                        'GX': 0,
+                        'ROCK': 1
+                        }
+        
     def getSceneName(self):
         if "Nuke" in self.interpreter:
             import nuke
